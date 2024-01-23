@@ -2,7 +2,6 @@ import { TodoList } from "@/business/TodoList";
 import { Plus } from "react-feather";
 import { NotificationType, Task } from "@/business/Task";
 import TaskComponent from "@/app/list/TaskComponent";
-import { invoke } from "@tauri-apps/api/tauri";
 import { useCallback } from "react";
 import { useAppContext } from "@/app/AppContext";
 
@@ -16,7 +15,7 @@ const SimpleTodoList = ({
   const context = useAppContext();
   const addTaskToList = useCallback(() => {
     context.create_task_in_list(list.id).catch((e) => console.error(e));
-  }, [list.id]);
+  }, [context, list.id]);
 
   return (
     <>

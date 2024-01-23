@@ -3,7 +3,6 @@
 
 use tauri::{generate_handler};
 use crate::storage::{NonPersistentStorage, Storage};
-use crate::task::{NotificationType, Task};
 
 mod todo_list;
 mod task;
