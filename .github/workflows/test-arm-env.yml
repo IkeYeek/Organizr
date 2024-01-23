@@ -18,7 +18,7 @@ jobs:
             apt update -y --allow-releaseinfo-change
             apt upgrade -y
             apt autoremove -y
-            apt install file
+            apt install -y file
             touch test.txt
             echo "text" > test.txt
             file test.txt
