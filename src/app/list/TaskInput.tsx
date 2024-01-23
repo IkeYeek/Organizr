@@ -1,5 +1,5 @@
 import React, { ChangeEvent } from "react";
-import EnhancedTextInput from "@/business/EnhancedTextInput";
+import EnhancedTextInput from "@/app/EnhancedTextInput";
 import styles from "@/app/list/styles/taskcomponent.module.scss";
 
 const TaskInput = (props: {

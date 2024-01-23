@@ -9,7 +9,7 @@ import {
 } from "@/business/AvailableIcons";
 import styles from "./styles/settings.module.scss";
 import NoIcon from "@/app/list/NoIcon";
-import EnhancedTextInput from "@/business/EnhancedTextInput";
+import EnhancedTextInput from "@/app/EnhancedTextInput";
 
 export type ListSettings = {
   title: string;

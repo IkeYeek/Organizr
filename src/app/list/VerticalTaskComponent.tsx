@@ -2,7 +2,7 @@ import { NotificationType, Task } from "@/business/Task";
 import React, { useEffect, useRef, useState } from "react";
 import { Bell, BellOff, Check, Trash, X } from "react-feather";
 import styles from "./styles/taskcomponent.module.scss";
-import EnhancedTextInput from "@/business/EnhancedTextInput";
+import EnhancedTextInput from "@/app/EnhancedTextInput";
 
 const VerticalTaskComponent = ({
   task,
