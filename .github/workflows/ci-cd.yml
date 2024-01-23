@@ -48,6 +48,8 @@ jobs:
         uses: ATiltedTree/setup-rust@v1
         with:
           rust-version: stable
+      - name: Setup frontend
+        run: yarn install
       - name: Build Tauri App
         run: yarn tauri build
 
