@@ -9,6 +9,7 @@ import styles from "./page.module.scss";
 import { useRouter, useSearchParams } from "next/navigation";
 import { AvailableIcons } from "@/business/AvailableIcons";
 import SimpleTodoList from "@/app/list/[id]/SimpleTodoList";
+import TodoDoneList from "@/app/list/[id]/TodoDoneList";
 
 const Page = ({ params }: { params: { id: number } }) => {
   const router = useRouter();
@@ -26,7 +27,11 @@ const Page = ({ params }: { params: { id: number } }) => {
 
   const [listSettings, setListSettings] = useState<ListSettings>(
     list === undefined
-      ? { title: "", icon: AvailableIcons.None, type: "Todo" }
+      ? {
+          title: "",
+          icon: AvailableIcons.None,
+          type: "Todo",
+        }
       : {
           title: list.title,
           icon: list.icon,
@@ -95,12 +100,21 @@ const Page = ({ params }: { params: { id: number } }) => {
           </div>
         </header>
         <div className="card-content">
-          <SimpleTodoList
-            list={list}
-            updateTask={(task) => {
-              context.updateTaskInList(list, task);
-            }}
-          />
+          {list.type === "Todo" ? (
+            <SimpleTodoList
+              list={list}
+              updateTask={(task) => {
+                context.updateTaskInList(list, task);
+              }}
+            />
+          ) : (
+            <TodoDoneList
+              list={list}
+              updateTask={(task) => {
+                context.updateTaskInList(list, task);
+              }}
+            />
+          )}
         </div>
       </div>
     </>

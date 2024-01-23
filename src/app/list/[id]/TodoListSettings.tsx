@@ -7,7 +7,7 @@ import {
   matchIconWithElement,
 } from "@/business/AvailableIcons";
 import styles from "./settings.module.scss";
-import { Slash } from "react-feather";
+import { Check, Slash, X } from "react-feather";
 import NoIcon from "@/app/list/[id]/NoIcon";
 
 export type ListSettings = {
@@ -50,90 +50,94 @@ const TodoListSettings = ({
     });
   }, [title, type, icon]);
   return (
-    <div>
-      <div className="field">
-        <label htmlFor="name" className="label">
-          name
-        </label>
-        <div className="control">
-          <input
-            type="text"
-            className="input"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-          />
+    <>
+      <div>
+        <div className="field">
+          <label htmlFor="name" className="label">
+            name
+          </label>
+          <div className="control">
+            <input
+              type="text"
+              className="input"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+            />
+          </div>
         </div>
-      </div>
-      <div className="buttons has-addons">
-        <button
-          className={`button ${
-            type === "Todo" ? "is-active has-background-primary" : "is-disabled"
-          } ${styles["list-type-button"]}`}
-          onClick={() => setType("Todo")}
-        >
-          Todo
-        </button>
-        <button
-          className={`button ${
-            type === "Todo_Done"
-              ? "is-active has-background-primary"
-              : "is-disabled"
-          } ${styles["list-type-button"]}`}
-          onClick={() => setType("Todo_Done")}
-        >
-          Todo + Done
-        </button>
-      </div>
-      <div className="field">
-        <label htmlFor="icon" className="label">
-          icon
-        </label>
-        <div className="control">
-          <div className="dropdown is-hoverable">
-            <div className="dropdown-trigger">
-              {matchIconWithElement(icon) || <NoIcon />}
-            </div>
-            <div className="dropdown-menu" id="dropdown-menu3" role="menu">
-              <div
-                className="dropdown-content"
-                style={{
-                  position: "fixed",
-                  zIndex: 20,
-                }}
-              >
-                {Object.keys(AvailableIcons)
-                  .filter((v) => isNaN(Number(v)))
-                  .map((e) => {
-                    return (
-                      <a
-                        className={"dropdown-item"}
-                        key={e}
-                        onClick={() =>
-                          setIcon(
+        <div className="buttons has-addons">
+          <button
+            className={`button ${
+              type === "Todo"
+                ? "is-active has-background-primary"
+                : "is-disabled"
+            } ${styles["list-type-button"]}`}
+            onClick={() => setType("Todo")}
+          >
+            Todo
+          </button>
+          <button
+            className={`button ${
+              type === "Todo_Done"
+                ? "is-active has-background-primary"
+                : "is-disabled"
+            } ${styles["list-type-button"]}`}
+            onClick={() => setType("Todo_Done")}
+          >
+            Todo + Done
+          </button>
+        </div>
+        <div className="field">
+          <label htmlFor="icon" className="label">
+            icon
+          </label>
+          <div className="control">
+            <div className="dropdown is-hoverable">
+              <div className="dropdown-trigger">
+                {matchIconWithElement(icon) || <NoIcon />}
+              </div>
+              <div className="dropdown-menu" id="dropdown-menu3" role="menu">
+                <div
+                  className="dropdown-content"
+                  style={{
+                    position: "fixed",
+                    zIndex: 20,
+                  }}
+                >
+                  {Object.keys(AvailableIcons)
+                    .filter((v) => isNaN(Number(v)))
+                    .map((e) => {
+                      return (
+                        <a
+                          className={"dropdown-item"}
+                          key={e}
+                          onClick={() =>
+                            setIcon(
+                              iconEnumFromName(e as AvailableIconsAsStrings),
+                            )
+                          }
+                        >
+                          {matchIconWithElement(
                             iconEnumFromName(e as AvailableIconsAsStrings),
-                          )
-                        }
-                      >
-                        {matchIconWithElement(
-                          iconEnumFromName(e as AvailableIconsAsStrings),
-                        ) || <NoIcon />}
-                      </a>
-                    );
-                  })}
+                          ) || <NoIcon />}
+                        </a>
+                      );
+                    })}
+                </div>
               </div>
             </div>
           </div>
         </div>
+        <div className="field">
+          <button
+            className={`button is-danger ${styles["delete-button"]}`}
+            onClick={deleteList}
+          >
+            Delete
+          </button>
+        </div>
       </div>
-      <div className="field">
-        <button
-          className={`button is-danger ${styles["delete-button"]}`}
-          onClick={deleteList}
-        >
-          Delete
-        </button>
-      </div>
-    </div>
+    </>
   );
 };
 

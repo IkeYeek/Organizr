@@ -1,6 +1,6 @@
 import { TodoList } from "@/business/TodoList";
 import { Plus } from "react-feather";
-import { createTask, Task } from "@/business/Task";
+import { createTask, NotificationType, Task } from "@/business/Task";
 import { useContext, useEffect, useState } from "react";
 import TodoListContext from "@/app/list/TodoListContext";
 import TaskComponent from "@/app/list/[id]/TaskComponent";
@@ -16,10 +16,27 @@ const SimpleTodoList = ({
   const addTaskToList = () => {
     context.insertTaskInList(list, createTask());
   };
+
+  const showTodoFirst = (tasks: Task[]): Task[] => {
+    return tasks.sort((a, b) => {
+      return (a.done && b.done) || (!a.done && !b.done)
+        ? 0
+        : a.done && !b.done
+          ? 1
+          : -1;
+    });
+  };
+
+  const filter = (tasks: Task[]): Task[] => {
+    let filters = (tasks: Task[]) => tasks;
+    if (false) filters = (tasks: Task[]) => showTodoFirst(filters(tasks));
+    return filters(tasks);
+  };
+
   return (
     <>
       <ul>
-        {list.tasks.map((task) => {
+        {filter(list.tasks).map((task) => {
           return (
             <TaskComponent
               task={task}
@@ -28,7 +45,18 @@ const SimpleTodoList = ({
                 updateTask(t);
               }}
               deleteTask={() => context.deleteTaskInList(list, task)}
-              switchTaskStatus={() => context.switchTaskStateInList(list, task)}
+              setNotificationMode={(mode: NotificationType) =>
+                context.updateTaskInList(list, {
+                  ...task,
+                  notify: mode,
+                })
+              }
+              switchTaskStatus={() =>
+                context.updateTaskInList(list, {
+                  ...task,
+                  done: !task.done,
+                })
+              }
             />
           );
         })}

@@ -8,32 +8,32 @@ const TaskComponent = ({
   updateTask,
   deleteTask,
   switchTaskStatus,
+  setNotificationMode: __setNotificationMode,
 }: {
   task: Task;
   updateTask: (task: Task) => void;
   deleteTask: () => void;
   switchTaskStatus: () => void;
+  setNotificationMode: (mode: NotificationType) => void;
 }) => {
   const [title, setTitle] = useState(task.title);
   const [notificationMenuActive, setNotificationMenuActive] = useState(false);
   const [notificationMode, _setNotificationMode] = useState(task.notify);
   const [textAreaElement, setTextAreaElement] =
     useState<HTMLTextAreaElement | null>(null);
-  const [textAreaFocused, _setTextAreaFocused] = useState(false);
-  const setTextAreaFocused = (tv: boolean) => {
-    console.log(tv);
-    _setTextAreaFocused(tv);
-  };
+  const [textAreaFocused, setTextAreaFocused] = useState(false);
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
   useEffect(() => {
     setTextAreaElement(textAreaRef.current);
   }, [textAreaRef]);
+
   const setNotificationMode = (
     e: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
     type: NotificationType,
   ) => {
     e.stopPropagation();
     _setNotificationMode(type);
+    __setNotificationMode(type);
   };
   return (
     <div
@@ -53,7 +53,7 @@ const TaskComponent = ({
             />
           </button>
         </div>
-        <div className={`control column is-11 ${styles["input-container"]}`}>
+        <div className={`control column is-10 ${styles["input-container"]}`}>
           <textarea
             value={title}
             onChange={(e) => setTitle(e.target.value)}

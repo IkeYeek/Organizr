@@ -8,11 +8,11 @@ import { createTask, Task } from "@/business/Task";
 import { ArrowLeft } from "react-feather";
 const DUMMY_LISTS: Array<TodoList> = [
   createTodoList(0, "Dummy 1", AvailableIcons.None),
-  createTodoList(1, "Dummy 2", AvailableIcons.Camera),
-  createTodoList(2, "Dummy 3", AvailableIcons.Camera),
+  createTodoList(1, "Dummy 2", AvailableIcons.Trash),
+  createTodoList(2, "Dummy 3", AvailableIcons.Music),
   createTodoList(3, "Dummy 4", AvailableIcons.None),
-  createTodoList(4, "Dummy 5", AvailableIcons.Camera),
-  createTodoList(5, "Dummy 6", AvailableIcons.Camera),
+  createTodoList(4, "Dummy 5", AvailableIcons.List),
+  createTodoList(5, "Dummy 6", AvailableIcons.Calendar),
   createTodoList(6, "Dummy 7", AvailableIcons.None),
 ];
 const TodoListContextProvider = ({ content }: { content: ReactNode }) => {
@@ -27,6 +27,7 @@ const TodoListContextProvider = ({ content }: { content: ReactNode }) => {
   const setLists = (l: TodoList[]) => {
     _setLists(l);
   };
+
   return (
     <TodoListContext.Provider
       value={{
@@ -36,12 +37,13 @@ const TodoListContextProvider = ({ content }: { content: ReactNode }) => {
           setLists(newLists);
           return newLists[newLists.length - 1];
         },
-        updateList: (list: TodoList) =>
+        updateList: (list: TodoList) => {
           setLists(
             lists.map((currList) => {
               return list.id === currList.id ? list : currList;
             }),
-          ),
+          );
+        },
         deleteList: (list: TodoList) =>
           setLists(lists.filter((currList) => list.id !== currList.id)),
         insertTaskInList: (list: TodoList, item: Task) =>
