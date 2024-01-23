@@ -56,4 +56,14 @@ jobs:
         run: yarn install
       - name: Build Tauri App
         run: yarn tauri build
+      - name: Upload DEB artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: organizr-deb
+          path: src-tauri/target/release/bundle/deb/*.deb
 
+      - name: Upload AppImage artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: organizr-appimage
+          path: src-tauri/target/release/bundle/appimage/*.AppImage
