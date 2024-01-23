@@ -6,13 +6,13 @@ on:
       - main
 
 jobs:
-  build:
+  lint:
     runs-on: ubuntu-latest
 
     strategy:
       matrix:
-        os: [windows-latest, macos-latest, ubuntu-latest]
-        arch: [x64, arm64]
+        os: [ubuntu-latest]
+        arch: [x64]
 
     steps:
       - name: Checkout Repository
@@ -33,6 +33,13 @@ jobs:
           cargo clippy -- -D warnings -W clippy::pedantic 
           cd ..
 
+  build:
+    runs-on: ubuntu-latest
+    strategy: 
+      matrix:
+        os: [ubuntu-latest]
+        arch: [x64]
+    steps:
       - name: Build Tauri App
         run: yarn tauri build
 
