@@ -42,6 +42,11 @@ jobs:
         os: [ubuntu-latest]
         arch: [x64]
     steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+        steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
       - name: Build Tauri App
         run: yarn tauri build
 
