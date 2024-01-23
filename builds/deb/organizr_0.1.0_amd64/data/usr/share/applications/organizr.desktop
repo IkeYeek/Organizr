@@ -1,0 +1,7 @@
+[Desktop Entry]
+Categories=Development;
+Exec=organizr
+Icon=organizr
+Name=organizr
+Terminal=false
+Type=Application
