@@ -16,6 +16,7 @@ import { useRouter } from "next/navigation";
 import { invoke } from "@tauri-apps/api/tauri";
 import moment from "moment";
 import { emit, listen } from "@tauri-apps/api/event";
+import { route } from "@/business/Helpers";
 
 export default function Home() {
   const todoListContext = useContext(TodoListContext);
@@ -27,16 +28,29 @@ export default function Home() {
   const handleCreateList = useCallback(() => {
     invoke<TodoList>("create_todo_list")
       .then((l) => {
-        router.push(`/list/${l.id}?new`);
+        route(`/list?id=${l.id}&new}`, router).catch((e) => console.error(e));
       })
       .catch((e) => console.error(e));
   }, [router]);
 
-  useEffect(() => {
-    invoke("pull_todo_lists").then((lists) => {
+  const load = useCallback(() => {
+    invoke<TodoList[]>("pull_todo_lists").then((lists) => {
       setTodoLists(lists);
     });
   }, []);
+
+  useEffect(() => {
+    const unlisten = listen("refresh-lists", (e) => {
+      load();
+    });
+
+    return () => {
+      unlisten.then((f) => f());
+    };
+  }, [load]);
+  useEffect(() => {
+    load();
+  }, [load]);
 
   if (todo_lists === undefined) return <p>loading...</p>;
 

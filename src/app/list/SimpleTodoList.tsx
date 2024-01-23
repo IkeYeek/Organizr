@@ -3,7 +3,7 @@ import { Plus } from "react-feather";
 import { createTask, NotificationType, Task } from "@/business/Task";
 import { useContext, useEffect, useState } from "react";
 import TodoListContext from "@/app/list/TodoListContext";
-import TaskComponent from "@/app/list/[id]/TaskComponent";
+import TaskComponent from "@/app/list/TaskComponent";
 import { invoke } from "@tauri-apps/api/tauri";
 
 const SimpleTodoList = ({

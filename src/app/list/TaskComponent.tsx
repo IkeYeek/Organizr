@@ -9,7 +9,7 @@ import React, {
 } from "react";
 import { Bell, BellOff, Check, Trash, X } from "react-feather";
 import styles from "./taskcomponent.module.scss";
-import TaskInput from "@/app/list/[id]/TaskInput";
+import TaskInput from "@/app/list/TaskInput";
 import DateTimePicker from "react-datetime-picker";
 import "react-datetime-picker/dist/DateTimePicker.css";
 import "react-calendar/dist/Calendar.css";

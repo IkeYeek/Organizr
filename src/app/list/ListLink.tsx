@@ -4,6 +4,7 @@ import "./listlink.scss";
 import { TodoList } from "@/business/TodoList";
 import { useRouter } from "next/navigation";
 import styles from "./listlink.module.scss";
+import { route } from "@/business/Helpers";
 
 export type ListLinkProps = {
   todo_list: TodoList;
@@ -15,7 +16,9 @@ const ListLink = ({ todo_list }: ListLinkProps) => {
     <div
       className={"card has-background-info list-link"}
       onClick={() => {
-        router.push(`/list/${todo_list.id}`);
+        route(`/list?id=${todo_list.id}`, router).catch((e) =>
+          console.error(e),
+        );
       }}
     >
       <div className={`card-content list-link-content ${styles["card-fix"]}`}>

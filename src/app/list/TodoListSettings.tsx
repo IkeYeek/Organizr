@@ -8,7 +8,7 @@ import {
   matchIconWithElement,
 } from "@/business/AvailableIcons";
 import styles from "./settings.module.scss";
-import NoIcon from "@/app/list/[id]/NoIcon";
+import NoIcon from "@/app/list/NoIcon";
 import EnhancedTextInput from "@/business/EnhancedTextInput";
 
 export type ListSettings = {
@@ -52,7 +52,7 @@ const TodoListSettings = ({
       type,
       icon,
     });
-  }, [title, type, icon]);
+  }, [title, type, icon, updateListSettings]);
   return (
     <>
       <div>

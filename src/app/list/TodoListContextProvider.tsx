@@ -6,6 +6,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { AvailableIcons } from "@/business/AvailableIcons";
 import { createTask, Task } from "@/business/Task";
 import { ArrowLeft } from "react-feather";
+import { route } from "@/business/Helpers";
 const DUMMY_LISTS: Array<TodoList> = [
   createTodoList(0, "Dummy 1", AvailableIcons.None),
   createTodoList(1, "Dummy 2", AvailableIcons.Trash),
@@ -22,7 +23,7 @@ const TodoListContextProvider = ({ content }: { content: ReactNode }) => {
   const pathname = usePathname();
   const router = useRouter();
   const back = useCallback(() => {
-    router.back();
+    route("/", router).catch((e) => console.error(e));
   }, [router]);
   const setLists = (l: TodoList[]) => {
     _setLists(l);

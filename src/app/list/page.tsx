@@ -2,9 +2,7 @@
 import { useCallback, useContext, useEffect, useState } from "react";
 import TodoListContext from "@/app/list/TodoListContext";
 import { Settings } from "react-feather";
-import TodoListSettings, {
-  ListSettings,
-} from "@/app/list/[id]/TodoListSettings";
+import TodoListSettings, { ListSettings } from "@/app/list/TodoListSettings";
 import styles from "./page.module.scss";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
@@ -12,8 +10,8 @@ import {
   AvailableIconsAsStrings,
   iconEnumFromName,
 } from "@/business/AvailableIcons";
-import SimpleTodoList from "@/app/list/[id]/SimpleTodoList";
-import TodoDoneList from "@/app/list/[id]/TodoDoneList";
+import SimpleTodoList from "@/app/list/SimpleTodoList";
+import TodoDoneList from "@/app/list/TodoDoneList";
 import { invoke } from "@tauri-apps/api/tauri";
 import {
   createTodoList,
@@ -23,13 +21,15 @@ import {
 } from "@/business/TodoList";
 import { listen, UnlistenFn } from "@tauri-apps/api/event";
 import { unsubscribe } from "diagnostics_channel";
+import { route } from "@/business/Helpers";
 
-const Page = ({ params }: { params: { id: number } }) => {
+const Page = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [modalActive, setModalActive] = useState(
     searchParams.get("new") !== null,
   );
+  let [id, setId] = useState(+searchParams.get("id")!);
   const context = useContext(TodoListContext);
   const [list, setList] = useState<TodoList | undefined>(undefined);
   const loadList = useCallback(() => {
@@ -39,9 +39,9 @@ const Page = ({ params }: { params: { id: number } }) => {
       title: string;
       icon: string;
       list_type: string;
-    } | null>("pull_todo_list", { id: +params.id }).then((tl) => {
+    } | null>("pull_todo_list", { id }).then((tl) => {
       if (tl === null) {
-        router.push("/");
+        route("/", router).catch((e) => console.error(e));
       } else {
         let parsed_tl = createTodoList(
           tl.id,
@@ -58,7 +58,7 @@ const Page = ({ params }: { params: { id: number } }) => {
         });
       }
     });
-  }, [params.id, router]);
+  }, [id, router]);
 
   useEffect(() => loadList(), [loadList]);
   useEffect(() => {
@@ -72,6 +72,10 @@ const Page = ({ params }: { params: { id: number } }) => {
       if (unlisten !== undefined) unlisten();
     };
   }, [list, loadList]);
+  const updateListSettings = useCallback(
+    () => (newListSettings: ListSettings) => setListSettings(newListSettings),
+    [],
+  );
 
   const [listSettings, setListSettings] = useState<undefined | ListSettings>();
 
@@ -82,7 +86,7 @@ const Page = ({ params }: { params: { id: number } }) => {
     invoke("delete_list", {
       id: list.id,
     }).catch((e) => console.log(e));
-    router.push("/");
+    route("/", router).catch((e) => console.error(e));
   };
 
   return (
@@ -104,9 +108,7 @@ const Page = ({ params }: { params: { id: number } }) => {
           <section className={`modal-card-body ${styles["settings-section"]}`}>
             <TodoListSettings
               listSettings={listSettings}
-              updateListSettings={(newListSettings: ListSettings) =>
-                setListSettings(newListSettings)
-              }
+              updateListSettings={updateListSettings}
               deleteList={deleteList}
               active={modalActive}
             />

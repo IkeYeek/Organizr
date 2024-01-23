@@ -21,15 +21,15 @@ pub(crate) fn pull_todo_lists(app_handle: AppHandle, state: tauri::State<NonPers
 pub(crate) fn create_todo_list(app_handle: AppHandle, state: tauri::State<NonPersistentStorage>) -> TodoList {
     debug!("commands::create_todo_list");
     let created_list_id = state.create_todo_list();
-    state.pull_list(created_list_id).unwrap()
+
+    let list = state.pull_list(created_list_id).unwrap();
+    evt_refresh_lists(app_handle);
+    list
 }
 
 #[tauri::command]
 pub(crate) fn pull_todo_list(id: usize, app_handle: AppHandle, state: tauri::State<NonPersistentStorage>) -> Option<TodoList> {
     debug!("commands::pull_todo_list");
-    for list in state.pull() {
-        println!("{}", list);
-    }
     state.pull_list(id)
 }
 
@@ -63,9 +63,10 @@ pub(crate) fn delete_task_in_list(id: usize, tid: usize, app_handle: AppHandle, 
 }
 
 #[tauri::command]
-pub(crate) fn delete_list(id: usize, state: tauri::State<NonPersistentStorage>) {
+pub(crate) fn delete_list(id: usize, app_handle: AppHandle, state: tauri::State<NonPersistentStorage>) {
     debug!("commands::delete_list");
     state.delete_list(id);
+    evt_refresh_lists(app_handle);
 }
 #[derive(Clone, Serialize)]
 struct UpdateListPayload {
@@ -77,4 +78,10 @@ pub(crate) fn evt_refresh_list(list_id: usize, app_handle: AppHandle) {
     let _unsubscribe = app_handle.emit_all("refresh-list", UpdateListPayload {
         list_id
     });
+    evt_refresh_lists(app_handle);
+}
+
+pub(crate) fn evt_refresh_lists(app_handle: AppHandle) {
+    debug!("evt::refresh_lists");
+    let _unsubscribe = app_handle.emit_all("refresh-lists",{});
 }

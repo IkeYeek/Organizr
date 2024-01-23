@@ -1,10 +1,10 @@
-import TaskComponent from "@/app/list/[id]/TaskComponent";
+import TaskComponent from "@/app/list/TaskComponent";
 import { createTask, NotificationType, Task } from "@/business/Task";
 import { Plus } from "react-feather";
 import { useContext } from "react";
 import TodoListContext from "@/app/list/TodoListContext";
 import { TodoList } from "@/business/TodoList";
-import VerticalTaskComponent from "@/app/list/[id]/VerticalTaskComponent";
+import VerticalTaskComponent from "@/app/list/VerticalTaskComponent";
 import { invoke } from "@tauri-apps/api/tauri";
 
 const TodoDoneList = ({
