@@ -1,8 +1,11 @@
 use std::fmt;
 use std::fmt::{Display, Formatter};
 use chrono::{DateTime, Utc};
+use chrono::serde::ts_seconds_option;
 
-#[derive(Debug)]
+
+
+#[derive(Debug, serde::Serialize, serde::Deserialize, Clone)]
 pub enum NotificationType {
     None,
     NonIntrusive,
@@ -19,18 +22,20 @@ impl Display for NotificationType {
     }
 }
 
-#[derive(Debug)]
-pub struct Task<'a> {
-    id: String,
-    title: &'a str,
-    done: bool,
-    due: Option<DateTime<Utc>>,
-    notify: NotificationType,
+
+#[derive(Debug, serde::Serialize, serde::Deserialize, Clone)]
+pub struct Task {
+    pub(crate) id: usize,
+    pub(crate) title: String,
+    pub(crate) done: bool,
+    #[serde(with = "ts_seconds_option")]
+    pub(crate) due: Option<DateTime<Utc>>,
+    pub(crate) notify: NotificationType,
 }
 
-impl<'a> Task<'a> {
-    pub fn new( id: String,
-                title: &'a str,
+impl Task {
+    pub fn new( id: usize,
+                title: String,
                 done: bool,
                 due: Option<DateTime<Utc>>,
                 notify: NotificationType,) -> Self {
@@ -44,7 +49,7 @@ impl<'a> Task<'a> {
     }
 }
 
-impl Display for Task<'_> {
+impl Display for Task {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         let due = match self.due {
             Option::None => String::from("Not defined"),

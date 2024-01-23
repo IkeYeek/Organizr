@@ -11,13 +11,13 @@ export type AvailableIconsAsStrings =
   | "Music";
 
 export enum AvailableIcons {
-  None,
-  List,
-  Calendar,
-  Music,
-  Video,
-  Trash,
-  Briefcase,
+  None = "None",
+  List = "List",
+  Calendar = "Calendar",
+  Music = "Music",
+  Video = "Video",
+  Trash = "Trash",
+  Briefcase = "Briefcase",
 }
 const iconEnumFromName = (iconName: AvailableIconsAsStrings) => {
   switch (iconName) {

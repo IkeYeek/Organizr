@@ -1,13 +1,14 @@
 use fmt::Display;
 use std::fmt;
 use std::fmt::{Formatter};
+use std::ops::Deref;
 use crate::task::Task;
-#[derive(Debug)]
+#[derive(Debug, serde::Serialize, serde::Deserialize, Clone)]
 pub enum TodoListType {
     Todo,
     TodoDone,
 }
-#[derive(Debug)]
+#[derive(Debug, serde::Serialize, serde::Deserialize, Clone)]
 pub enum AvailableIcons {
     None,
     List,
@@ -39,20 +40,20 @@ impl Display for TodoListType {
         }
     }
 }
-pub type TasksType<'a> = Vec<&'a mut Task<'a>>;
+pub type TasksType = Vec<Task>;
 
-#[derive(Debug)]
-pub struct Tasks<'a> (pub TasksType<'a>);
-#[derive(Debug)]
-pub struct TodoList<'a> {
+#[derive(Debug, serde::Serialize, serde::Deserialize, Clone)]
+pub struct Tasks (pub TasksType);
+#[derive(Debug, serde::Serialize, serde::Deserialize, Clone)]
+pub struct TodoList {
     pub(crate) id: usize,
     pub title: String,
     pub icon: AvailableIcons,
     pub list_type: TodoListType,
-    pub tasks: Tasks<'a>,
+    pub tasks: Tasks,
 }
-impl<'a> TodoList<'a> {
-    pub fn new(id: usize, title: String, icon: AvailableIcons, list_type: TodoListType, tasks: Tasks<'a>) -> Self {
+impl TodoList {
+    pub fn new(id: usize, title: String, icon: AvailableIcons, list_type: TodoListType, tasks: Tasks) -> Self {
         Self {
             id,
             title,
@@ -62,29 +63,47 @@ impl<'a> TodoList<'a> {
         }
     }
 
-    pub fn add_task(&mut self, task: &'a mut Task<'a>) {
+    pub fn add_task(&mut self, task: Task) {
         self.tasks.0.push(task);
     }
 
-    pub fn tasks(&self) -> &TasksType<'a> {
-       &self.tasks.0
+    pub fn update_task(&mut self, updated_task: Task) {
+        if let Some(existing_task_idx) = self.tasks.0.iter().position(|task| task.id == updated_task.id) {
+            // Replace the existing task with the updated_task
+            self.tasks.0[existing_task_idx] = updated_task;
+        } else {
+            // Handle the case where the task with the same id is not found
+            // You might want to log a message or raise an error here based on your requirements.
+            println!("Task with id {} not found in the list.", updated_task.id);
+        }
+    }
+
+    pub fn get_task_by_id(&self, task_id: usize) -> Option<&Task> {
+        match self.tasks().iter().find(|task| task.id == task_id) {
+            None => None,
+            Some(task) => Some(task)
+        }
+    }
+
+    pub fn tasks(&self) -> &TasksType {
+      & self.tasks.0
     }
 }
 
-impl PartialEq for TodoList<'_> {
+impl PartialEq for TodoList {
     fn eq(&self, other: &Self) -> bool {
         self.id == other.id
     }
 }
 
-impl Display for TodoList<'_> {
+impl Display for TodoList {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         let dbg = format!("List {} of id {}\n\t icon: {}\t-\ttype: {}\n{}", self.title, self.id, self.icon, self.list_type, self.tasks).to_string();
         write!(f, "{}", dbg.as_str())
     }
 }
 
-impl Display for Tasks<'_> {
+impl Display for Tasks {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         let mut dbg = String::from("\t tasks:\n");
         self.0.iter().for_each(|task| dbg.push_str(format!("\t{}", task.to_string()).as_str()));

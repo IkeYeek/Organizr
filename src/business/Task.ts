@@ -1,12 +1,12 @@
 import { v4 as uuidv4 } from "uuid";
 export enum NotificationType {
-  None,
-  Non_Intrusive,
-  Intrusive,
+  None = "None",
+  Non_Intrusive = "Non_Intrusive",
+  Intrusive = "Intrusive",
 }
 
 export type Task = {
-  id: string;
+  id: number;
   title: string;
   done: boolean;
   due?: Date;
@@ -14,14 +14,14 @@ export type Task = {
 };
 
 const createTask = (
-  id?: string,
+  id?: number,
   title?: string,
   done?: boolean,
   due?: Date,
   notify?: NotificationType,
 ): Task => {
   const task: Task = {
-    id: id || uuidv4(),
+    id: id || 0,
     title: title || "new task",
     done: done || false,
     notify: notify || NotificationType.None,

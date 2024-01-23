@@ -84,11 +84,11 @@ const TodoListSettings = ({
           </button>
           <button
             className={`button ${
-              type === "Todo_Done"
+              type === "TodoDone"
                 ? "is-active has-background-primary"
                 : "is-disabled"
             } ${styles["list-type-button"]}`}
-            onClick={() => setType("Todo_Done")}
+            onClick={() => setType("TodoDone")}
           >
             Todo + Done
           </button>

@@ -1,9 +1,9 @@
 import { AvailableIcons } from "@/business/AvailableIcons";
 import { Task } from "@/business/Task";
 
-export type TodoListType = "Todo" | "Todo_Done";
+export type TodoListType = "Todo" | "TodoDone";
 
-type TodoListStruct = {
+export type TodoListStruct = {
   id: number;
   title: string;
   icon: AvailableIcons;

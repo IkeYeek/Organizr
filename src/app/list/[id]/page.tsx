@@ -1,5 +1,5 @@
 "use client";
-import { useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import TodoListContext from "@/app/list/TodoListContext";
 import { Settings } from "react-feather";
 import TodoListSettings, {
@@ -7,9 +7,22 @@ import TodoListSettings, {
 } from "@/app/list/[id]/TodoListSettings";
 import styles from "./page.module.scss";
 import { useRouter, useSearchParams } from "next/navigation";
-import { AvailableIcons } from "@/business/AvailableIcons";
+import {
+  AvailableIcons,
+  AvailableIconsAsStrings,
+  iconEnumFromName,
+} from "@/business/AvailableIcons";
 import SimpleTodoList from "@/app/list/[id]/SimpleTodoList";
 import TodoDoneList from "@/app/list/[id]/TodoDoneList";
+import { invoke } from "@tauri-apps/api/tauri";
+import {
+  createTodoList,
+  TodoList,
+  TodoListStruct,
+  TodoListType,
+} from "@/business/TodoList";
+import { listen, UnlistenFn } from "@tauri-apps/api/event";
+import { unsubscribe } from "diagnostics_channel";
 
 const Page = ({ params }: { params: { id: number } }) => {
   const router = useRouter();
@@ -18,29 +31,59 @@ const Page = ({ params }: { params: { id: number } }) => {
     searchParams.get("new") !== null,
   );
   const context = useContext(TodoListContext);
-  const lists = context.lists;
-  const list = lists.filter((list) => list.id === +params.id).pop()!;
-  useEffect(() => {
-    if (list === undefined) router.push("/");
-  }, [list, router]);
-  const deleteList = () => {
-    context.deleteList(list);
-  };
+  const [list, setList] = useState<TodoList | undefined>(undefined);
+  const loadList = useCallback(() => {
+    invoke<{
+      id: number;
+      tasks: [];
+      title: string;
+      icon: string;
+      list_type: string;
+    } | null>("pull_todo_list", { id: +params.id }).then((tl) => {
+      if (tl === null) {
+        router.push("/");
+      } else {
+        let parsed_tl = createTodoList(
+          tl.id,
+          tl.title,
+          iconEnumFromName(tl.icon as AvailableIconsAsStrings),
+          tl.tasks,
+          tl.list_type as TodoListType,
+        );
+        setList(parsed_tl);
+        setListSettings({
+          title: parsed_tl.title,
+          icon: parsed_tl.icon,
+          type: parsed_tl.type,
+        });
+      }
+    });
+  }, [params.id, router]);
 
-  const [listSettings, setListSettings] = useState<ListSettings>(
-    list === undefined
-      ? {
-          title: "",
-          icon: AvailableIcons.None,
-          type: "Todo",
-        }
-      : {
-          title: list.title,
-          icon: list.icon,
-          type: list.type,
-        },
-  );
-  if (list === undefined) return <></>;
+  useEffect(() => loadList(), [loadList]);
+  useEffect(() => {
+    let unlisten: UnlistenFn | undefined = undefined;
+    listen<{ list_id: number }>("refresh-list", (e) => {
+      if (list !== undefined && e.payload.list_id === list.id) loadList();
+    }).then((e) => {
+      unlisten = e;
+    });
+    return () => {
+      if (unlisten !== undefined) unlisten();
+    };
+  }, [list, loadList]);
+
+  const [listSettings, setListSettings] = useState<undefined | ListSettings>();
+
+  if (list === undefined || listSettings === undefined)
+    return <p>loading...</p>;
+
+  const deleteList = () => {
+    invoke("delete_list", {
+      id: list.id,
+    }).catch((e) => console.log(e));
+    router.push("/");
+  };
 
   return (
     <>
@@ -72,12 +115,15 @@ const Page = ({ params }: { params: { id: number } }) => {
             <button
               className="button is-success"
               onClick={() => {
-                context.updateList({
+                const l = {
                   ...list,
-                  type: listSettings.type,
+                  list_type: listSettings.type,
                   icon: listSettings.icon,
                   title: listSettings.title,
-                });
+                };
+                invoke("update_list", {
+                  updatedList: l,
+                }).catch((e) => console.error(e));
                 setModalActive(false);
               }}
             >
@@ -106,7 +152,11 @@ const Page = ({ params }: { params: { id: number } }) => {
             <SimpleTodoList
               list={list}
               updateTask={(task) => {
-                context.updateTaskInList(list, task);
+                invoke("update_task_in_list", {
+                  id: list!.id,
+                  task,
+                }).catch((e) => console.error(e));
+                //context.updateTaskInList(list, task);
               }}
             />
           ) : (
