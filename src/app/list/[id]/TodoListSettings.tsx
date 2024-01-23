@@ -15,21 +15,23 @@ export type ListSettings = {
 type TodoListSettingsProps = {
   listSettings: ListSettings;
   updateListSettings: (nls: ListSettings) => void;
+  deleteList: () => void;
   active: boolean;
 };
 const TodoListSettings = ({
   listSettings,
   updateListSettings,
+  deleteList,
   active,
 }: TodoListSettingsProps) => {
-  const [title, set_title] = useState(listSettings.title);
-  const [type, set_type] = useState(listSettings.type);
-  const [icon, set_icon] = useState(listSettings.icon);
+  const [title, setTitle] = useState(listSettings.title);
+  const [type, setType] = useState(listSettings.type);
+  const [icon, setIcon] = useState(listSettings.icon);
 
   const initValues = useCallback(() => {
-    set_title(listSettings.title);
-    set_type(listSettings.type);
-    set_icon(listSettings.icon);
+    setTitle(listSettings.title);
+    setType(listSettings.type);
+    setIcon(listSettings.icon);
   }, [listSettings]);
 
   useEffect(() => {
@@ -54,7 +56,7 @@ const TodoListSettings = ({
             type="text"
             className="input"
             value={title}
-            onChange={(e) => set_title(e.target.value)}
+            onChange={(e) => setTitle(e.target.value)}
           />
         </div>
       </div>
@@ -72,7 +74,7 @@ const TodoListSettings = ({
           style={{
             flex: "1 1 0px",
           }}
-          onClick={() => set_type("Todo")}
+          onClick={() => setType("Todo")}
         >
           Todo
         </button>
@@ -85,7 +87,7 @@ const TodoListSettings = ({
           style={{
             flex: "1 1 0px",
           }}
-          onClick={() => set_type("Todo_Done")}
+          onClick={() => setType("Todo_Done")}
         >
           Todo + Done
         </button>
@@ -104,8 +106,20 @@ const TodoListSettings = ({
                 {Object.keys(AvailableIcons)
                   .filter((v) => isNaN(Number(v)))
                   .map((e) => {
-                    return matchIconWithElement(
-                      iconEnumFromName(e as "None" | "Camera"),
+                    return (
+                      <a
+                        className={"dropdown-item"}
+                        key={e}
+                        onClick={() =>
+                          setIcon(
+                            iconEnumFromName(e as "None" | "Camera" | "Trash"),
+                          )
+                        }
+                      >
+                        {matchIconWithElement(
+                          iconEnumFromName(e as "None" | "Camera" | "Trash"),
+                        ) || "no icon"}
+                      </a>
                     );
                   })}
               </div>
@@ -119,6 +133,7 @@ const TodoListSettings = ({
           style={{
             float: "right",
           }}
+          onClick={deleteList}
         >
           Delete
         </button>

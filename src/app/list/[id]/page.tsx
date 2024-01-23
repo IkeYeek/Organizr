@@ -6,22 +6,35 @@ import TodoListSettings, {
   ListSettings,
 } from "@/app/list/[id]/TodoListSettings";
 import styles from "./page.module.scss";
+import { useRouter, useSearchParams } from "next/navigation";
+import { AvailableIcons } from "@/business/AvailableIcons";
+import SimpleTodoList from "@/app/list/[id]/SimpleTodoList";
 
 const Page = ({ params }: { params: { id: number } }) => {
-  const [modalActive, _setModalActive] = useState(false);
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const [modalActive, setModalActive] = useState(
+    searchParams.get("new") !== null,
+  );
   const context = useContext(TodoListContext);
   const lists = context.lists;
   const list = lists.filter((list) => list.id === +params.id).pop()!;
-
-  const [listSettings, setListSettings] = useState<ListSettings>({
-    title: list.title,
-    icon: list.icon,
-    type: list.type,
-  });
-
-  const setModalActive = (value: boolean) => {
-    _setModalActive(value);
+  if (list === undefined) router.push("/");
+  const deleteList = () => {
+    context.deleteList(list);
   };
+
+  const [listSettings, setListSettings] = useState<ListSettings>(
+    list === undefined
+      ? { title: "", icon: AvailableIcons.None, type: "Todo" }
+      : {
+          title: list.title,
+          icon: list.icon,
+          type: list.type,
+        },
+  );
+  if (list === undefined) return <></>;
+
   return (
     <>
       <div className={"modal " + (modalActive ? "is-active" : "")}>
@@ -44,20 +57,22 @@ const Page = ({ params }: { params: { id: number } }) => {
               updateListSettings={(newListSettings: ListSettings) =>
                 setListSettings(newListSettings)
               }
+              deleteList={deleteList}
               active={modalActive}
             />
           </section>
           <footer className="modal-card-foot">
             <button
               className="button is-success"
-              onClick={() =>
+              onClick={() => {
                 context.updateList({
                   ...list,
                   type: listSettings.type,
                   icon: listSettings.icon,
                   title: listSettings.title,
-                })
-              }
+                });
+                setModalActive(false);
+              }}
             >
               Save changes
             </button>
@@ -80,11 +95,12 @@ const Page = ({ params }: { params: { id: number } }) => {
           </div>
         </header>
         <div className="card-content">
-          <ul>
-            {list.tasks.map((task) => {
-              return <p key={task.id}>{task.title}</p>;
-            })}
-          </ul>
+          <SimpleTodoList
+            list={list}
+            updateTask={(task) => {
+              context.updateTask(list, task);
+            }}
+          />
         </div>
       </div>
     </>

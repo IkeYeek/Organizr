@@ -14,6 +14,7 @@ type TodoListStruct = {
 export type TodoList = TodoListStruct & {
   todo: () => Task[];
   done: () => Task[];
+  insertItem: (t: Task) => void;
 };
 
 const createTodoList = (
@@ -24,7 +25,7 @@ const createTodoList = (
   type?: TodoListType,
 ): TodoList => {
   const todo_list: TodoListStruct = {
-    id: id || -1,
+    id: id || (id === undefined ? -1 : 0),
     title: title || "new list",
     icon: icon || AvailableIcons.None,
     tasks: tasks || [],
@@ -34,6 +35,9 @@ const createTodoList = (
     ...todo_list,
     todo: () => todo_list.tasks!.filter((task) => task.done),
     done: () => todo_list.tasks!.filter((task) => task.done),
+    insertItem: (t: Task) => {
+      todo_list.tasks!.push(t);
+    },
   };
 };
 

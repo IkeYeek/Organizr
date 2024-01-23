@@ -4,7 +4,7 @@ import moment from "moment/moment";
 import React, { useCallback, useEffect, useState } from "react";
 import styles from "./footer.module.scss";
 import { clearInterval } from "timers";
-let nowProxy = () => "date"; //moment().format("dd. MMMM Do YYYY, h:mm a");
+let nowProxy = () => moment().format("dd. MMMM Do YYYY, h:mm a");
 const Footer: React.FC = () => {
   const [now, setNow] = useState(() => nowProxy());
   const [intervalId, setIntervalId] = useState<NodeJS.Timeout | undefined>(
