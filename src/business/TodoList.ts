@@ -3,16 +3,12 @@ import { Task } from "@/business/Task";
 
 export type TodoListType = "Todo" | "TodoDone";
 
-export type TodoListStruct = {
+export type TodoList = {
   id: number;
   title: string;
   icon: AvailableIcons;
   type: TodoListType;
   tasks: Task[];
-};
-
-export type TodoList = TodoListStruct & {
-  insertItem: (t: Task) => void;
 };
 
 const createTodoList = (
@@ -22,22 +18,12 @@ const createTodoList = (
   tasks?: Array<Task>,
   type?: TodoListType,
 ): TodoList => {
-  const todo_list: TodoListStruct = {
+  return {
     id: id || (id === undefined ? -1 : 0),
     title: title || "new list",
     icon: icon || AvailableIcons.None,
     tasks: tasks || [],
     type: type || "Todo",
-  };
-  return {
-    icon: todo_list.icon,
-    tasks: todo_list.tasks,
-    type: todo_list.type,
-    title: todo_list.title,
-    id: todo_list.id,
-    insertItem: (t: Task) => {
-      todo_list.tasks!.push(t);
-    },
   };
 };
 

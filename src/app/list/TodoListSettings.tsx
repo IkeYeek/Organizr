@@ -7,7 +7,7 @@ import {
   iconEnumFromName,
   matchIconWithElement,
 } from "@/business/AvailableIcons";
-import styles from "./settings.module.scss";
+import styles from "./styles/settings.module.scss";
 import NoIcon from "@/app/list/NoIcon";
 import EnhancedTextInput from "@/business/EnhancedTextInput";
 
@@ -33,8 +33,6 @@ const TodoListSettings = ({
   const [type, setType] = useState(listSettings.type);
   const [icon, setIcon] = useState(listSettings.icon);
   const [iconDropdownActive, setIconDropdownActive] = useState(false);
-
-  const testRef = useRef<HTMLDivElement | undefined>();
 
   const initValues = useCallback(() => {
     setTitle(listSettings.title);
@@ -100,7 +98,7 @@ const TodoListSettings = ({
           <div className="control">
             <div
               className={`dropdown ${iconDropdownActive ? "is-active" : ""}`}
-              onPointerDown={(e) => {
+              onPointerDown={() => {
                 setIconDropdownActive(true);
               }}
             >

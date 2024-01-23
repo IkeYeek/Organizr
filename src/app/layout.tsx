@@ -1,11 +1,9 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import "./globals.scss";
-import styles from "./layout.module.scss";
-import moment from "moment";
+import "./styles/globals.scss";
+import styles from "./styles/layout.module.scss";
 import Footer from "@/app/Footer";
 import React from "react";
-import { useRouter } from "next/navigation";
 import TodoListContextProvider from "@/app/list/TodoListContextProvider";
 import { Bell, Settings } from "react-feather";
 

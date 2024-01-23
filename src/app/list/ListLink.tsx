@@ -1,9 +1,9 @@
 import React from "react";
 import { matchIconWithElement } from "@/business/AvailableIcons";
-import "./listlink.scss";
+import "./styles/listlink.scss";
 import { TodoList } from "@/business/TodoList";
 import { useRouter } from "next/navigation";
-import styles from "./listlink.module.scss";
+import styles from "./styles/listlink.module.scss";
 import { route } from "@/business/Helpers";
 
 export type ListLinkProps = {

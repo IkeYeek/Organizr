@@ -1,28 +1,19 @@
 "use client";
-import { useCallback, useContext, useEffect, useState } from "react";
-import TodoListContext from "@/app/list/TodoListContext";
+import { useCallback, useEffect, useState } from "react";
 import { Settings } from "react-feather";
 import TodoListSettings, { ListSettings } from "@/app/list/TodoListSettings";
-import styles from "./page.module.scss";
+import styles from "./styles/page.module.scss";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
-  AvailableIcons,
   AvailableIconsAsStrings,
   iconEnumFromName,
 } from "@/business/AvailableIcons";
 import SimpleTodoList from "@/app/list/SimpleTodoList";
 import TodoDoneList from "@/app/list/TodoDoneList";
 import { invoke } from "@tauri-apps/api/tauri";
-import {
-  createTodoList,
-  TodoList,
-  TodoListStruct,
-  TodoListType,
-} from "@/business/TodoList";
+import { createTodoList, TodoList, TodoListType } from "@/business/TodoList";
 import { listen, UnlistenFn } from "@tauri-apps/api/event";
-import { unsubscribe } from "diagnostics_channel";
 import { route } from "@/business/Helpers";
-import { NotificationType } from "@/business/Task";
 
 const Page = () => {
   const router = useRouter();
@@ -30,9 +21,7 @@ const Page = () => {
   const [modalActive, setModalActive] = useState(
     searchParams.get("new") !== null,
   );
-  let [t, st] = useState(false);
-  let [id, setId] = useState(+searchParams.get("id")!);
-  const context = useContext(TodoListContext);
+  let [id] = useState(+searchParams.get("id")!);
   const [list, setList] = useState<TodoList | undefined>(undefined);
   const loadList = useCallback(() => {
     invoke<{
@@ -166,7 +155,10 @@ const Page = () => {
             <TodoDoneList
               list={list}
               updateTask={(task) => {
-                context.updateTaskInList(list, task);
+                invoke("update_task_in_list", {
+                  id: list!.id,
+                  task,
+                }).catch((e) => console.error(e));
               }}
             />
           )}

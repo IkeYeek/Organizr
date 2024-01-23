@@ -1,6 +1,6 @@
 import React, { ChangeEvent } from "react";
 import EnhancedTextInput from "@/business/EnhancedTextInput";
-import styles from "@/app/list/taskcomponent.module.scss";
+import styles from "@/app/list/styles/taskcomponent.module.scss";
 
 const TaskInput = (props: {
   value: string;

@@ -13,7 +13,7 @@ $info: $yellow;
 $success: $green-light;
 $orange: $yellow;
 
-@import "../../node_modules/bulma/bulma.sass";
+@import "../../../node_modules/bulma/bulma";
 $danger: $red;
 $dark: $grey-darker;
 $text: $grey-dark;

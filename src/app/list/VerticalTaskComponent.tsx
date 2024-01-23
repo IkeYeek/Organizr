@@ -1,7 +1,7 @@
 import { NotificationType, Task } from "@/business/Task";
 import React, { useEffect, useRef, useState } from "react";
 import { Bell, BellOff, Check, Trash, X } from "react-feather";
-import styles from "./taskcomponent.module.scss";
+import styles from "./styles/taskcomponent.module.scss";
 import EnhancedTextInput from "@/business/EnhancedTextInput";
 
 const VerticalTaskComponent = ({
@@ -116,7 +116,7 @@ const VerticalTaskComponent = ({
                   <BellOff
                     className={`${styles["task-component-icon"]} has-text-grey`}
                   />
-                ) : notificationMode === NotificationType.Non_Intrusive ? (
+                ) : notificationMode === NotificationType.NonIntrusive ? (
                   <Bell
                     className={`${styles["task-component-icon"]} has-text-grey`}
                   />
@@ -144,7 +144,7 @@ const VerticalTaskComponent = ({
                     href="#"
                     className="dropdown-item has-text-primary"
                     onMouseDown={(e) =>
-                      setNotificationMode(e, NotificationType.Non_Intrusive)
+                      setNotificationMode(e, NotificationType.NonIntrusive)
                     }
                   >
                     <Bell className={"mr-5 has-text-grey"} />

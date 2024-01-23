@@ -1,16 +1,9 @@
 "use client";
 import { NotificationType, Task } from "@/business/Task";
-import React, {
-  ChangeEvent,
-  MouseEventHandler,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Bell, BellOff, Check, Trash, X } from "react-feather";
-import styles from "./taskcomponent.module.scss";
+import styles from "./styles/taskcomponent.module.scss";
 import TaskInput from "@/app/list/TaskInput";
-import DateTimePicker from "react-datetime-picker";
 import "react-datetime-picker/dist/DateTimePicker.css";
 import "react-calendar/dist/Calendar.css";
 import "react-clock/dist/Clock.css";
@@ -53,14 +46,6 @@ const TaskComponent = ({
     _setNotificationMode(type);
     __setNotificationMode(type);
   };
-  type ValuePiece = Date | null;
-
-  type Value = ValuePiece | [ValuePiece, ValuePiece];
-  const [notifyDate, setNotifyDate] = useState<Value>(new Date());
-
-  const configureNotification = (
-    e: React.MouseEvent<HTMLDivElement, MouseEvent>,
-  ) => {};
 
   return (
     <>
@@ -107,7 +92,6 @@ const TaskComponent = ({
               }`}
               onClick={() => setNotificationMenuActive(true)}
               onBlur={() => setNotificationMenuActive(false)}
-              onContextMenu={(e) => configureNotification(e)}
             >
               <div className="dropdown-trigger">
                 <button
@@ -117,7 +101,7 @@ const TaskComponent = ({
                     <BellOff
                       className={`${styles["task-component-icon"]} has-text-grey`}
                     />
-                  ) : notificationMode === NotificationType.Non_Intrusive ? (
+                  ) : notificationMode === NotificationType.NonIntrusive ? (
                     <Bell
                       className={`${styles["task-component-icon"]} has-text-grey`}
                     />
@@ -144,7 +128,7 @@ const TaskComponent = ({
                     href="#"
                     className="dropdown-item has-text-primary"
                     onMouseDown={(e) =>
-                      setNotificationMode(e, NotificationType.Non_Intrusive)
+                      setNotificationMode(e, NotificationType.NonIntrusive)
                     }
                   >
                     <Bell className={"mr-5 has-text-grey"} />

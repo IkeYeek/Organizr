@@ -1,8 +1,5 @@
-import TaskComponent from "@/app/list/TaskComponent";
-import { createTask, NotificationType, Task } from "@/business/Task";
+import { NotificationType, Task } from "@/business/Task";
 import { Plus } from "react-feather";
-import { useContext } from "react";
-import TodoListContext from "@/app/list/TodoListContext";
 import { TodoList } from "@/business/TodoList";
 import VerticalTaskComponent from "@/app/list/VerticalTaskComponent";
 import { invoke } from "@tauri-apps/api/tauri";
@@ -14,28 +11,12 @@ const TodoDoneList = ({
   list: TodoList;
   updateTask: (task: Task) => void;
 }) => {
-  const context = useContext(TodoListContext);
   const addTaskToList = () => {
     invoke("create_task_in_list", {
       id: list.id,
     }).catch((e) => console.error(e));
   };
 
-  const showTodoFirst = (tasks: Task[]): Task[] => {
-    return tasks.sort((a, b) => {
-      return (a.done && b.done) || (!a.done && !b.done)
-        ? 0
-        : a.done && !b.done
-          ? 1
-          : -1;
-    });
-  };
-
-  const filter = (tasks: Task[]): Task[] => {
-    let filters = (tasks: Task[]) => tasks;
-    if (false) filters = (tasks: Task[]) => showTodoFirst(filters(tasks));
-    return filters(tasks);
-  };
   return (
     <div className={"columns"}>
       <div className={"column is-6"}>
@@ -65,21 +46,15 @@ const TodoDoneList = ({
                       },
                     }).catch((e) => console.error(e));
                   }}
-                  switchTaskStatus={
-                    () => {
-                      invoke("update_task_in_list", {
-                        id: list!.id,
-                        task: {
-                          ...task,
-                          done: !task.done,
-                        },
-                      }).catch((e) => console.error(e));
-                    }
-                    /*context.updateTaskInList(list, {
-                          ...task,
-                          done: !task.done,
-                        })*/
-                  }
+                  switchTaskStatus={() => {
+                    invoke("update_task_in_list", {
+                      id: list!.id,
+                      task: {
+                        ...task,
+                        done: !task.done,
+                      },
+                    }).catch((e) => console.error(e));
+                  }}
                 />
               );
             })}
@@ -115,21 +90,15 @@ const TodoDoneList = ({
                       },
                     }).catch((e) => console.error(e));
                   }}
-                  switchTaskStatus={
-                    () => {
-                      invoke("update_task_in_list", {
-                        id: list!.id,
-                        task: {
-                          ...task,
-                          done: !task.done,
-                        },
-                      }).catch((e) => console.error(e));
-                    }
-                    /*context.updateTaskInList(list, {
-                      ...task,
-                      done: !task.done,
-                    })*/
-                  }
+                  switchTaskStatus={() => {
+                    invoke("update_task_in_list", {
+                      id: list!.id,
+                      task: {
+                        ...task,
+                        done: !task.done,
+                      },
+                    }).catch((e) => console.error(e));
+                  }}
                 />
               );
             })}

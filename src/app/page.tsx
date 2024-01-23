@@ -1,25 +1,16 @@
 "use client";
-import { createTodoList, TodoList } from "@/business/TodoList";
+import { TodoList } from "@/business/TodoList";
 import ListLink from "@/app/list/ListLink";
-import {
-  AvailableIcons,
-  matchIconWithElement,
-} from "@/business/AvailableIcons";
-import { createTask } from "@/business/Task";
+
 import CreateList from "@/app/list/CreateList";
-import { useCallback, useContext, useEffect, useState } from "react";
-import TodoListContext from "@/app/list/TodoListContext";
-import Link from "next/link";
-import styles from "./page.module.scss";
-import createList from "@/app/list/CreateList";
+import { useCallback, useEffect, useState } from "react";
+import styles from "./styles/page.module.scss";
 import { useRouter } from "next/navigation";
 import { invoke } from "@tauri-apps/api/tauri";
-import moment from "moment";
-import { emit, listen } from "@tauri-apps/api/event";
+import { listen } from "@tauri-apps/api/event";
 import { route } from "@/business/Helpers";
 
 export default function Home() {
-  const todoListContext = useContext(TodoListContext);
   const router = useRouter();
   const [todo_lists, setTodoLists] = useState<undefined | TodoList[]>(
     undefined,
@@ -42,7 +33,7 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    const unlisten = listen("refresh-lists", (e) => {
+    const unlisten = listen("refresh-lists", () => {
       load();
     });
 
@@ -55,13 +46,6 @@ export default function Home() {
   }, [load]);
 
   if (todo_lists === undefined) return <p>loading...</p>;
-
-  interface TestPayload {
-    date: string;
-  }
-  interface TestEvent {
-    payload: TestPayload;
-  }
 
   return (
     <div className={styles.main}>

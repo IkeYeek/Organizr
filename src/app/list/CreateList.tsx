@@ -1,5 +1,5 @@
 import { FilePlus } from "react-feather";
-import styles from "./createlist.module.scss";
+import styles from "./styles/createlist.module.scss";
 
 type CreateListProps = {
   handleCreateList: () => void;
