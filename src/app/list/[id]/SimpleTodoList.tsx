@@ -27,6 +27,8 @@ const SimpleTodoList = ({
               updateTask={(t) => {
                 updateTask(t);
               }}
+              deleteTask={() => context.deleteTaskInList(list, task)}
+              switchTaskStatus={() => context.switchTaskStateInList(list, task)}
             />
           );
         })}

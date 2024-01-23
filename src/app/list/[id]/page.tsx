@@ -98,7 +98,7 @@ const Page = ({ params }: { params: { id: number } }) => {
           <SimpleTodoList
             list={list}
             updateTask={(task) => {
-              context.updateTask(list, task);
+              context.updateTaskInList(list, task);
             }}
           />
         </div>

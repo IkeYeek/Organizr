@@ -5,6 +5,7 @@ import {
   iconEnumFromName,
   matchIconWithElement,
 } from "@/business/AvailableIcons";
+import styles from "./settings.module.scss";
 
 export type ListSettings = {
   title: string;
@@ -60,20 +61,11 @@ const TodoListSettings = ({
           />
         </div>
       </div>
-      <div
-        className="buttons has-addons"
-        style={{
-          display: "flex",
-          maxWidth: 300,
-        }}
-      >
+      <div className="buttons has-addons">
         <button
           className={`button ${
             type === "Todo" ? "is-active has-background-primary" : "is-disabled"
-          }`}
-          style={{
-            flex: "1 1 0px",
-          }}
+          } ${styles["list-type-button"]}`}
           onClick={() => setType("Todo")}
         >
           Todo
@@ -83,10 +75,7 @@ const TodoListSettings = ({
             type === "Todo_Done"
               ? "is-active has-background-primary"
               : "is-disabled"
-          }`}
-          style={{
-            flex: "1 1 0px",
-          }}
+          } ${styles["list-type-button"]}`}
           onClick={() => setType("Todo_Done")}
         >
           Todo + Done
@@ -129,10 +118,7 @@ const TodoListSettings = ({
       </div>
       <div className="field">
         <button
-          className="button is-danger"
-          style={{
-            float: "right",
-          }}
+          className={`button is-danger ${styles["delete-button"]}`}
           onClick={deleteList}
         >
           Delete

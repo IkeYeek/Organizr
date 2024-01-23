@@ -1,27 +1,15 @@
 import { FilePlus } from "react-feather";
+import styles from "./createlist.module.scss";
 
 type CreateListProps = {
   handleCreateList: () => void;
 };
 const CreateList = ({ handleCreateList }: CreateListProps) => {
   return (
-    <div
-      style={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        width: "200px",
-        height: "200px",
-      }}
-    >
+    <div className={styles["create-list"]}>
       <button
-        className={"button is-rounded has-background-info"}
+        className={`button is-rounded has-background-info ${styles["create-list-button"]}`}
         onClick={handleCreateList}
-        style={{
-          width: "60%",
-          height: "60%",
-          border: "black",
-        }}
       >
         <FilePlus />
       </button>

@@ -5,15 +5,21 @@ import { createTask, Task } from "@/business/Task";
 
 type TodoListContextType = {
   lists: TodoList[];
-  insert: (t: TodoList) => TodoList | undefined;
+
+  insertList: (t: TodoList) => TodoList | undefined;
   updateList: (list: TodoList) => void;
   deleteList: (list: TodoList) => void;
+
   insertTaskInList: (list: TodoList, item: Task) => void;
-  updateTask: (list: TodoList, task: Task) => void;
+  updateTaskInList: (list: TodoList, task: Task) => void;
+  deleteTaskInList: (list: TodoList, task: Task) => void;
+  switchTaskStateInList: (list: TodoList, task: Task) => void;
 };
 const TodoListContext = createContext<TodoListContextType>({
   lists: [] as TodoList[],
-  insert: () => undefined,
+  insertList: () => {
+    throw new Error("default provider implementation doesn't work !");
+  },
   updateList: (list: TodoList) => {
     throw new Error("default provider implementation doesn't work !");
   },
@@ -23,7 +29,13 @@ const TodoListContext = createContext<TodoListContextType>({
   insertTaskInList: (list: TodoList, item: Task) => {
     throw new Error("default provider implementation doesn't work !");
   },
-  updateTask: (list: TodoList, task: Task) => {
+  updateTaskInList: (list: TodoList, task: Task) => {
+    throw new Error("default provider implementation doesn't work !");
+  },
+  deleteTaskInList: (list: TodoList, task: Task) => {
+    throw new Error("default provider implementation doesn't work !");
+  },
+  switchTaskStateInList: (list: TodoList, task: Task) => {
     throw new Error("default provider implementation doesn't work !");
   },
 });

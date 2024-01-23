@@ -16,11 +16,10 @@ import { useRouter } from "next/navigation";
 
 export default function Home() {
   const todoListContext = useContext(TodoListContext);
-  const lists = todoListContext.lists;
   const router = useRouter();
 
   const handleCreateList = () => {
-    const created = todoListContext.insert(createTodoList());
+    const created = todoListContext.insertList(createTodoList());
     if (created !== undefined) {
       router.push(`/list/${created.id}?new`);
     } else {
@@ -30,7 +29,7 @@ export default function Home() {
 
   return (
     <div className={styles.main}>
-      {lists.map((todo_list) => {
+      {todoListContext.lists.map((todo_list) => {
         return <ListLink todo_list={todo_list} key={todo_list.id} />;
       })}
       <CreateList handleCreateList={handleCreateList} />

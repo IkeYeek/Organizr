@@ -16,7 +16,9 @@ const DUMMY_LISTS: Array<TodoList> = [
   createTodoList(6, "Dummy 7", AvailableIcons.None),
 ];
 const TodoListContextProvider = ({ content }: { content: ReactNode }) => {
-  const [lists, _setLists] = useState([...DUMMY_LISTS] as TodoList[]);
+  const [lists, _setLists] = useState([
+    /*...DUMMY_LISTS*/
+  ] as TodoList[]);
   const pathname = usePathname();
   const router = useRouter();
   const back = useCallback(() => {
@@ -29,22 +31,20 @@ const TodoListContextProvider = ({ content }: { content: ReactNode }) => {
     <TodoListContext.Provider
       value={{
         lists: lists,
-        insert: (value: TodoList) => {
+        insertList: (value: TodoList) => {
           const newLists = [...lists, { ...value, id: lists.length }];
           setLists(newLists);
           return newLists[newLists.length - 1];
         },
-        updateList: (list: TodoList) => {
+        updateList: (list: TodoList) =>
           setLists(
             lists.map((currList) => {
               return list.id === currList.id ? list : currList;
             }),
-          );
-        },
-        deleteList: (list: TodoList) => {
-          setLists(lists.filter((currList) => list.id !== currList.id));
-        },
-        insertTaskInList: (list: TodoList, item: Task) => {
+          ),
+        deleteList: (list: TodoList) =>
+          setLists(lists.filter((currList) => list.id !== currList.id)),
+        insertTaskInList: (list: TodoList, item: Task) =>
           setLists(
             lists.map((currList) =>
               currList.id !== list.id
@@ -54,23 +54,51 @@ const TodoListContextProvider = ({ content }: { content: ReactNode }) => {
                     tasks: [...currList.tasks, item],
                   },
             ),
-          );
-        },
-        updateTask: (list: TodoList, task: Task) => {
-          console.log("!!");
+          ),
+        updateTaskInList: (list: TodoList, task: Task) => {
           list = {
             ...list,
             tasks: list.tasks.map((currTask) =>
               currTask.id === task.id ? task : currTask,
             ),
           };
-          console.log(task);
           setLists(
             lists.map((currList) =>
               currList.id === list.id ? list : currList,
             ),
           );
         },
+        deleteTaskInList: (list: TodoList, task: Task) =>
+          setLists(
+            lists.map((currList) =>
+              currList.id !== list.id
+                ? currList
+                : {
+                    ...list,
+                    tasks: list.tasks.filter(
+                      (currTask) => currTask.id !== task.id,
+                    ),
+                  },
+            ),
+          ),
+        switchTaskStateInList: (list: TodoList, task: Task) =>
+          setLists(
+            lists.map((currList) =>
+              currList.id !== list.id
+                ? currList
+                : {
+                    ...list,
+                    tasks: list.tasks.map((currTask) =>
+                      currTask.id !== task.id
+                        ? currTask
+                        : {
+                            ...task,
+                            done: !task.done,
+                          },
+                    ),
+                  },
+            ),
+          ),
       }}
     >
       {pathname !== "/" && (
