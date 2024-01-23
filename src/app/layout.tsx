@@ -6,7 +6,7 @@ import moment from "moment";
 import Footer from "@/app/Footer";
 import React from "react";
 import { useRouter } from "next/navigation";
-import TodoListContextProvider from "@/app/TodoListContextProvider";
+import TodoListContextProvider from "@/app/list/TodoListContextProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 

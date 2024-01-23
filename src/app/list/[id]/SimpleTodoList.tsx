@@ -2,7 +2,7 @@ import { TodoList } from "@/business/TodoList";
 import { Plus } from "react-feather";
 import { createTask, Task } from "@/business/Task";
 import { useContext, useEffect, useState } from "react";
-import TodoListContext from "@/app/TodoListContext";
+import TodoListContext from "@/app/list/TodoListContext";
 import TaskComponent from "@/app/list/[id]/TaskComponent";
 
 const SimpleTodoList = ({

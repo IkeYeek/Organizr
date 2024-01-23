@@ -1,17 +1,17 @@
 "use client";
 import { createTodoList, TodoList } from "@/business/TodoList";
-import ListLink from "@/app/ListLink";
+import ListLink from "@/app/list/ListLink";
 import {
   AvailableIcons,
   matchIconWithElement,
 } from "@/business/AvailableIcons";
 import { createTask } from "@/business/Task";
-import CreateList from "@/app/CreateList";
+import CreateList from "@/app/list/CreateList";
 import { useContext, useState } from "react";
-import TodoListContext from "@/app/TodoListContext";
+import TodoListContext from "@/app/list/TodoListContext";
 import Link from "next/link";
 import styles from "./page.module.scss";
-import createList from "@/app/CreateList";
+import createList from "@/app/list/CreateList";
 import { useRouter } from "next/navigation";
 
 export default function Home() {
