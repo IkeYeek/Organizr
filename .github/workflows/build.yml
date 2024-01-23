@@ -57,7 +57,7 @@ jobs:
           prerelease: false
   release-arm:
     runs-on: ubuntu-latest
-   permissions:
+    permissions:
       contents: write
     steps:
       - uses: actions/checkout@v3
