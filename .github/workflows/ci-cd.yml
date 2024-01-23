@@ -29,6 +29,7 @@ jobs:
           rust-version: stable
       - name: Lint Rust Backend
         run: |
+          sudo apt install libsoup2.4-dev
           sudo apt install libgtk-3-dev
           cd src-tauri 
           cargo clippy -- -D warnings -W clippy::pedantic 
