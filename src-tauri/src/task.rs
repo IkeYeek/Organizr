@@ -53,7 +53,7 @@ impl Display for Task {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         let due = match self.due {
             Option::None => String::from("Not defined"),
-            Option::Some(due_to) => due_to.to_rfc2822(),
+            Option::Some(due_to) => due_to.to_string(),
         };
 
         write!(f, "\tid: {}; title: {}; due to: {}; notify: {}, done: {}\n", self.id, self.title, due, self.notify, self.done)

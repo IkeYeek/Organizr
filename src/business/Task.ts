@@ -8,7 +8,7 @@ export type Task = {
   id: number;
   title: string;
   done: boolean;
-  due?: Date;
+  due?: number;
   notify: NotificationType;
 };
 
@@ -16,7 +16,7 @@ const createTask = (
   id?: number,
   title?: string,
   done?: boolean,
-  due?: Date,
+  due?: number,
   notify?: NotificationType,
 ): Task => {
   return {

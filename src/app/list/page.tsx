@@ -14,6 +14,7 @@ import { invoke } from "@tauri-apps/api/tauri";
 import { createTodoList, TodoList, TodoListType } from "@/business/TodoList";
 import { listen, UnlistenFn } from "@tauri-apps/api/event";
 import { route } from "@/business/Helpers";
+import { Task } from "@/business/Task";
 
 const Page = () => {
   const router = useRouter();
@@ -26,7 +27,7 @@ const Page = () => {
   const loadList = useCallback(() => {
     invoke<{
       id: number;
-      tasks: [];
+      tasks: [Task];
       title: string;
       icon: string;
       list_type: string;
@@ -38,7 +39,12 @@ const Page = () => {
           tl.id,
           tl.title,
           iconEnumFromName(tl.icon as AvailableIconsAsStrings),
-          tl.tasks,
+          tl.tasks.map((t) => {
+            return {
+              ...t,
+              due: t.due ? t.due * 1000 : t.due,
+            };
+          }),
           tl.list_type as TodoListType,
         );
         setList(parsed_tl);
@@ -147,7 +153,9 @@ const Page = () => {
               updateTask={(task) => {
                 invoke("update_task_in_list", {
                   id: list!.id,
-                  task,
+                  task: {
+                    ...task,
+                  },
                 }).catch((e) => console.error(e));
               }}
             />

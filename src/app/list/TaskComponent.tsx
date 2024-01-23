@@ -7,6 +7,7 @@ import TaskInput from "@/app/list/TaskInput";
 import "react-datetime-picker/dist/DateTimePicker.css";
 import "react-calendar/dist/Calendar.css";
 import "react-clock/dist/Clock.css";
+import { EventType } from "bulma-calendar";
 
 const TaskComponent = ({
   task,
@@ -38,6 +39,10 @@ const TaskComponent = ({
     setTextAreaElement(textAreaRef.current);
   }, [textAreaRef]);
 
+  const [datetime, setDateTime] = useState(task.due);
+  const [calendar, setCalendar] = useState<any | undefined>(undefined);
+  const calendarRef = useRef<HTMLInputElement>(null);
+
   const setNotificationMode = (
     e: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
     type: NotificationType,
@@ -46,6 +51,27 @@ const TaskComponent = ({
     _setNotificationMode(type);
     __setNotificationMode(type);
   };
+
+  useEffect(() => {
+    if (calendarRef.current !== null && calendar === undefined) {
+      import("bulma-calendar").then((r) => {
+        const bulmaCalendar = r.default;
+        const _calendar = new bulmaCalendar(calendarRef.current!, {
+          startDate: datetime ? new Date(datetime) : new Date(0),
+          startTime: datetime ? new Date(datetime) : new Date(0),
+        });
+        _calendar.on("save" as unknown as EventType, (e) => {
+          setDateTime(e.data.date.start?.getTime());
+          console.log(e.data.date.start?.getTime());
+          updateTask({
+            ...task,
+            due: e.data.date.start?.getTime(),
+          });
+        });
+        setCalendar(_calendar);
+      });
+    }
+  }, [calendar, datetime, task, updateTask]);
 
   return (
     <>
@@ -83,7 +109,7 @@ const TaskComponent = ({
                 setTextAreaFocused(false);
               }}
             />
-            23/12/2023 - 13:12
+            <input type="datetime-local" ref={calendarRef} />
           </div>
           <div className="control column is-0">
             <div

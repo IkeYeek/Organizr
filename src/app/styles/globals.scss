@@ -14,6 +14,9 @@ $success: $green-light;
 $orange: $yellow;
 
 @import "../../../node_modules/bulma/bulma";
+
+// Import component
+@import "../../../node_modules/bulma-calendar/dist/css/bulma-calendar.min.css";
 $danger: $red;
 $dark: $grey-darker;
 $text: $grey-dark;

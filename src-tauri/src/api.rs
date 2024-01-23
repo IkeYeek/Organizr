@@ -1,10 +1,19 @@
+use chrono::{DateTime, TimeZone, Utc};
 use log::debug;
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 use tauri::{AppHandle, Manager};
 use crate::storage::{NonPersistentStorage, Storage};
-use crate::task::Task;
+use crate::task::{NotificationType, Task};
 use crate::todo_list::TodoList;
 
+#[derive(Clone, Serialize, Deserialize)]
+pub(crate) struct JSTask {
+    pub(crate) id: usize,
+    pub(crate) title: String,
+    pub(crate) done: bool,
+    pub(crate) due: Option<i64>,
+    pub(crate) notify: NotificationType,
+}
 
 #[derive(Clone, Serialize)]
 struct PullListPayload {
@@ -49,9 +58,18 @@ pub(crate) fn update_list(updated_list: TodoList, app_handle: AppHandle, state: 
     evt_refresh_list(id, app_handle);
 }
 #[tauri::command]
-pub(crate) fn update_task_in_list(id: usize, task: Task, app_handle: AppHandle, state: tauri::State<NonPersistentStorage>) {
+pub(crate) fn update_task_in_list(id: usize, task: JSTask, app_handle: AppHandle, state: tauri::State<NonPersistentStorage>) {
     debug!("commands::update_task_in_list");
-    state.update_task_in_list(id, task);
+    state.update_task_in_list(id, Task {
+        id: task.id,
+        title: task.title,
+        notify: task.notify,
+        done: task.done,
+        due: match task.due {
+            None => None,
+            Some(due) => Some(Utc.timestamp_opt(due / 1000, 0).unwrap()),
+        }
+    });
     evt_refresh_list(id, app_handle);
 }
 
