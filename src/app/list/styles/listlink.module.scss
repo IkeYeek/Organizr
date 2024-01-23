@@ -5,3 +5,9 @@
 .card-fix-marg {
   margin-bottom: 10px;
 }
+
+.listTitle {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

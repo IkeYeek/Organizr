@@ -4,3 +4,9 @@
   padding: 2rem;
   background-color: red;
 }
+
+.listTitle {
+  max-width: 80%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

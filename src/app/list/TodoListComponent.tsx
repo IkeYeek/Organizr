@@ -15,8 +15,13 @@ const TodoListComponent = ({
   return (
     <div className={"card has-background-info"}>
       <header className="card-header">
-        <div className="card-header-title">
-          {list.title}
+        <div
+          className="card-header-title"
+          style={{
+            maxWidth: "100%",
+          }}
+        >
+          <p className={styles.listTitle}>{list.title}</p>
           <button
             className={`button is-rounded is-dark ${styles["settings-icon"]}`}
             onClick={setModalActive}

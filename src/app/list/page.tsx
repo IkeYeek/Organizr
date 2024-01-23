@@ -15,7 +15,7 @@ import { createTodoList, TodoList, TodoListType } from "@/business/TodoList";
 import { listen, UnlistenFn } from "@tauri-apps/api/event";
 import { route } from "@/business/Helpers";
 import { Task } from "@/business/Task";
-import TodoListComponent from "@/app/list/TodoList";
+import TodoListComponent from "@/app/list/TodoListComponent";
 
 const Page = () => {
   const router = useRouter();
@@ -59,9 +59,9 @@ const Page = () => {
     if (isNaN(id)) {
       const searchParams = new URLSearchParams(window.location.search); // yeahhhh so, basically having to do static export makes the use of dynamic routing impossible. Let's use useSearchParams then right ? wellll, not in page... Did I discover that long after having it working because it f*cked up arm build ? yes... so let's get to old js
       const maybeId = searchParams.get("id");
-      if (maybeId !== null) {
-        setId(+maybeId);
-      }
+      const maybeNew = searchParams.get("new");
+      if (maybeId !== null) setId(+maybeId);
+      if (maybeNew !== null) setModalActive(true);
     }
   }, [id]);
 

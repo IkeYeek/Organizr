@@ -23,7 +23,7 @@ const ListLink = ({ todo_list }: ListLinkProps) => {
     >
       <div className={`card-content list-link-content ${styles["card-fix"]}`}>
         {icon !== null && <div className={styles["card-fix-marg"]}>{icon}</div>}
-        <h3>{todo_list.title}</h3>
+        <h3 className={styles.listTitle}>{todo_list.title}</h3>
       </div>
       <footer className="card-footer">
         <span className="card-footer-item">
