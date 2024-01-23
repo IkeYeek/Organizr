@@ -6,30 +6,43 @@ import {
   matchIconWithElement,
 } from "@/business/AvailableIcons";
 
-type TodoListSettingsProps = {
-  name: string;
+export type ListSettings = {
+  title: string;
   type: TodoListType;
   icon: AvailableIcons;
+};
+
+type TodoListSettingsProps = {
+  listSettings: ListSettings;
+  updateListSettings: (nls: ListSettings) => void;
   active: boolean;
 };
 const TodoListSettings = ({
-  name: _name,
-  type: _type,
-  icon: _icon,
+  listSettings,
+  updateListSettings,
   active,
 }: TodoListSettingsProps) => {
-  const [name, set_name] = useState(_name);
-  const [type, set_type] = useState(_type);
-  const [icon, set_icon] = useState(_icon);
+  const [title, set_title] = useState(listSettings.title);
+  const [type, set_type] = useState(listSettings.type);
+  const [icon, set_icon] = useState(listSettings.icon);
 
   const initValues = useCallback(() => {
-    set_name(_name);
-    set_type(_type);
-    set_icon(_icon);
-  }, [_name, _type, _icon]);
+    set_title(listSettings.title);
+    set_type(listSettings.type);
+    set_icon(listSettings.icon);
+  }, [listSettings]);
+
   useEffect(() => {
     initValues();
   }, [active, initValues]);
+
+  useEffect(() => {
+    updateListSettings({
+      title,
+      type,
+      icon,
+    });
+  }, [title, type, icon]);
   return (
     <div>
       <div className="field">
@@ -40,8 +53,8 @@ const TodoListSettings = ({
           <input
             type="text"
             className="input"
-            value={name}
-            onChange={(e) => set_name(e.target.value)}
+            value={title}
+            onChange={(e) => set_title(e.target.value)}
           />
         </div>
       </div>

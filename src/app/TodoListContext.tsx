@@ -6,10 +6,12 @@ import { createTask } from "@/business/Task";
 type TodoListContextType = {
   lists: TodoList[];
   insert: (t: TodoList) => void;
+  updateList: (list: TodoList) => void;
 };
 const TodoListContext = createContext<TodoListContextType>({
   lists: [] as TodoList[],
   insert: () => {},
+  updateList: (list: TodoList) => {},
 });
 
 export default TodoListContext;

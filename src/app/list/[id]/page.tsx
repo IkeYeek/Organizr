@@ -2,13 +2,22 @@
 import { useContext, useState } from "react";
 import TodoListContext from "@/app/TodoListContext";
 import { Settings } from "react-feather";
-import TodoListSettings from "@/app/list/[id]/TodoListSettings";
+import TodoListSettings, {
+  ListSettings,
+} from "@/app/list/[id]/TodoListSettings";
 import styles from "./page.module.scss";
 
 const Page = ({ params }: { params: { id: number } }) => {
   const [modalActive, _setModalActive] = useState(false);
-  const lists = useContext(TodoListContext).lists;
-  const list = lists.filter((list) => (list.id = params.id)).pop()!;
+  const context = useContext(TodoListContext);
+  const lists = context.lists;
+  const list = lists.filter((list) => list.id === +params.id).pop()!;
+
+  const [listSettings, setListSettings] = useState<ListSettings>({
+    title: list.title,
+    icon: list.icon,
+    type: list.type,
+  });
 
   const setModalActive = (value: boolean) => {
     _setModalActive(value);
@@ -31,14 +40,27 @@ const Page = ({ params }: { params: { id: number } }) => {
           </header>
           <section className={`modal-card-body ${styles["settings-section"]}`}>
             <TodoListSettings
-              name={list.title}
-              type={list.type}
-              icon={list.icon}
+              listSettings={listSettings}
+              updateListSettings={(newListSettings: ListSettings) =>
+                setListSettings(newListSettings)
+              }
               active={modalActive}
             />
           </section>
           <footer className="modal-card-foot">
-            <button className="button is-success">Save changes</button>
+            <button
+              className="button is-success"
+              onClick={() =>
+                context.updateList({
+                  ...list,
+                  type: listSettings.type,
+                  icon: listSettings.icon,
+                  title: listSettings.title,
+                })
+              }
+            >
+              Save changes
+            </button>
             <button className="button" onClick={() => setModalActive(false)}>
               Cancel
             </button>

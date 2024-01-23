@@ -31,6 +31,13 @@ const TodoListContextProvider = ({ content }: { content: ReactNode }) => {
       value={{
         lists: lists,
         insert: (value: TodoList) => setLists([...lists, value]),
+        updateList: (list: TodoList) => {
+          setLists(
+            lists.map((currList) => {
+              return list.id === currList.id ? list : currList;
+            }),
+          );
+        },
       }}
     >
       {pathname !== "/" && (
