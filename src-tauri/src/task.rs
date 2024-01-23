@@ -56,6 +56,6 @@ impl Display for Task {
             Option::Some(due_to) => due_to.to_string(),
         };
 
-        write!(f, "\tid: {}; title: {}; due to: {}; notify: {}, done: {}\n", self.id, self.title, due, self.notify, self.done)
+        writeln!(f, "\tid: {}; title: {}; due to: {}; notify: {}, done: {}", self.id, self.title, due, self.notify, self.done)
     }
 }

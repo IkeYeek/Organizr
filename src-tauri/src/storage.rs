@@ -1,6 +1,6 @@
 use std::sync::Mutex;
 use crate::task::{NotificationType, Task};
-use crate::todo_list::{AvailableIcons, TodoList, TodoListType};
+use crate::todo_list::{AvailableIcons, Tasks, TodoList, Type};
 
 pub(crate) trait Storage {
     fn new() -> Self;
@@ -33,16 +33,14 @@ impl Storage for NonPersistentStorage {
         let mut list_idx_mutex = self.list_idx.lock().unwrap();
         let list_idx = *list_idx_mutex;
         *list_idx_mutex += 1;
-        let title = format!("New list {}", list_idx);
-        let list = TodoList {
-            id:  list_idx,
+        let title = format!("New list {list_idx}");
+        let list = TodoList::new(
+            list_idx,
             title,
-            icon: AvailableIcons::None,
-            list_type: TodoListType::Todo,
-            tasks: crate::todo_list::Tasks {
-                0: Vec::new(),
-            }
-        };
+            AvailableIcons::None,
+            Type::Todo,
+            Tasks(Vec::new()),
+        );
         lists.push(list);
         list_idx
     }
@@ -52,7 +50,7 @@ impl Storage for NonPersistentStorage {
     }
 
     fn pull_list(&self, id: usize) -> Option<TodoList> {
-        self.lists.lock().unwrap().to_vec().into_iter().find(|l| l.id == id)
+        self.lists.lock().unwrap().clone().into_iter().find(|l| l.id == id)
     }
 
     fn update_list(&self, update_model: TodoList) {
@@ -72,10 +70,10 @@ impl Storage for NonPersistentStorage {
     fn create_task_in_list(&self, list_id: usize) -> Task {
         let mut lists = self.lists.lock().unwrap();
         let mut idx_mutex = self.task_idx.lock().unwrap();
-        let next_id = idx_mutex.clone();
-        *idx_mutex = *idx_mutex + 1;
+        let next_id = idx_mutex.to_owned();
+        *idx_mutex += 1;
         let list = lists.iter_mut().find(|tdl| tdl.id == list_id);
-        let task = Task::new(next_id, format!("New task #{}", next_id), false, None, NotificationType::None);
+        let task = Task::new(next_id, format!("New task #{next_id}"), false, None, NotificationType::None);
         match list {
             None => panic!("Todo: handle this"),
             Some(list) => list.add_task(task.clone()),

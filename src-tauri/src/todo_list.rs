@@ -3,7 +3,7 @@ use std::fmt;
 use std::fmt::{Formatter};
 use crate::task::Task;
 #[derive(Debug, serde::Serialize, serde::Deserialize, Clone)]
-pub enum TodoListType {
+pub enum Type {
     Todo,
     TodoDone,
 }
@@ -31,11 +31,11 @@ impl Display for AvailableIcons {
     }
 }
 
-impl Display for TodoListType {
+impl Display for Type {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         match self {
-            TodoListType::Todo => write!(f, "Todo"),
-            TodoListType::TodoDone => write!(f, "Todo/Done"),
+            Type::Todo => write!(f, "Todo"),
+            Type::TodoDone => write!(f, "Todo/Done"),
         }
     }
 }
@@ -48,11 +48,11 @@ pub struct TodoList {
     pub(crate) id: usize,
     pub title: String,
     pub icon: AvailableIcons,
-    pub list_type: TodoListType,
+    pub list_type: Type,
     pub tasks: Tasks,
 }
 impl TodoList {
-    pub fn new(id: usize, title: String, icon: AvailableIcons, list_type: TodoListType, tasks: Tasks) -> Self {
+    pub fn new(id: usize, title: String, icon: AvailableIcons, list_type: Type, tasks: Tasks) -> Self {
         Self {
             id,
             title,
@@ -82,16 +82,6 @@ impl TodoList {
         }
     }
 
-    pub fn get_task_by_id(&self, task_id: usize) -> Option<&Task> {
-        match self.tasks().iter().find(|task| task.id == task_id) {
-            None => None,
-            Some(task) => Some(task)
-        }
-    }
-
-    pub fn tasks(&self) -> &TasksType {
-      & self.tasks.0
-    }
 }
 
 impl PartialEq for TodoList {
@@ -110,7 +100,7 @@ impl Display for TodoList {
 impl Display for Tasks {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         let mut dbg = String::from("\t tasks:\n");
-        self.0.iter().for_each(|task| dbg.push_str(format!("\t{}", task.to_string()).as_str()));
-        write!(f, "{}", dbg)
+        self.0.iter().for_each(|task| dbg.push_str(format!("\t{task}").as_str()));
+        write!(f, "{dbg}")
     }
 }
