@@ -8,7 +8,7 @@ on:
 jobs:
   release:
     permissions:
-      contents: write
+      contents: write-all
     strategy:
       fail-fast: false
       matrix:
@@ -58,7 +58,7 @@ jobs:
   release-arm:
     runs-on: ubuntu-latest
     permissions:
-      contents: write
+      contents: write-all
     steps:
       - uses: actions/checkout@v3
       - uses: pguyot/arm-runner-action@v2.5.2
@@ -74,22 +74,22 @@ jobs:
             # Workaround to CI worker being stuck on Updating crates.io index
             export CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse
             # Install setup prerequisites
-            apt-get update -y --allow-releaseinfo-change
-            apt-get upgrade -y
-            apt-get autoremove -y
-            apt-get install curl
+            apt update -y --allow-releaseinfo-change
+            apt upgrade -y
+            apt autoremove -y
+            apt install curl
             curl https://sh.rustup.rs -sSf | sh -s -- -y
             . "$HOME/.cargo/env"
             curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash
             # Install framework specific packages
             apt-get install -y nodejs
             npm install --global yarn
-            yarn install next@latest react@latest react-dom@latest eslint-config-next@latest
+            yarn add next@latest react@latest react-dom@latest eslint-config-next@latest
             # Install build tools and tauri-cli requirements
-            apt-get install -y libwebkit2gtk-4.0-dev build-essential wget libssl-dev libgtk-3-dev libayatana-appindicator3-dev librsvg2-dev
+            apt install -y libwebkit2gtk-4.0-dev build-essential wget libssl-dev libgtk-3-dev libayatana-appindicator3-dev librsvg2-dev
             cargo install tauri-cli
             # Install frontend dependencies
-            yarn install
+            yarn 
             # Build the application
             cargo tauri build
       - name: Upload deb bundle
