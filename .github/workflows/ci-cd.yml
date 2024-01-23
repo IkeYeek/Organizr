@@ -35,6 +35,7 @@ jobs:
           cargo clippy -- -D warnings -W clippy::pedantic 
           cd ..
 
+  
   build:
     runs-on: ubuntu-latest
     permissions:
