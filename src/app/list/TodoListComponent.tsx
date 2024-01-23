@@ -1,9 +1,9 @@
 import styles from "@/app/list/styles/todolist.module.scss";
 import { Settings } from "react-feather";
 import SimpleTodoList from "@/app/list/SimpleTodoList";
-import { invoke } from "@tauri-apps/api/tauri";
 import TodoDoneList from "@/app/list/TodoDoneList";
 import type { TodoList } from "@/business/TodoList";
+import { useAppContext } from "@/app/AppContext";
 
 const TodoListComponent = ({
   list,
@@ -12,6 +12,8 @@ const TodoListComponent = ({
   list: TodoList;
   setModalActive: () => void;
 }) => {
+  const context = useAppContext();
+
   return (
     <div className={"card has-background-info"}>
       <header className="card-header">
@@ -34,24 +36,20 @@ const TodoListComponent = ({
         {list.type === "Todo" ? (
           <SimpleTodoList
             list={list}
-            updateTask={(task) => {
-              invoke("update_task_in_list", {
-                id: list!.id,
-                task: {
-                  ...task,
-                },
-              }).catch((e) => console.error(e));
-            }}
+            updateTask={(task) =>
+              context
+                .update_task_in_list(list.id, task)
+                .catch((e) => console.error(e))
+            }
           />
         ) : (
           <TodoDoneList
             list={list}
-            updateTask={(task) => {
-              invoke("update_task_in_list", {
-                id: list!.id,
-                task,
-              }).catch((e) => console.error(e));
-            }}
+            updateTask={(task) =>
+              context
+                .update_task_in_list(list.id, task)
+                .catch((e) => console.error(e))
+            }
           />
         )}
       </div>

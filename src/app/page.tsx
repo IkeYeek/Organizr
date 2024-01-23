@@ -1,41 +1,40 @@
 "use client";
-import { TodoList } from "@/business/TodoList";
-import ListLink from "@/app/list/ListLink";
-
-import CreateList from "@/app/list/CreateList";
-import { useCallback, useEffect, useState } from "react";
-import styles from "./styles/page.module.scss";
 import { useRouter } from "next/navigation";
-import { invoke } from "@tauri-apps/api/tauri";
-import { listen } from "@tauri-apps/api/event";
+import { useCallback, useEffect, useState } from "react";
+import { TodoList } from "@/business/TodoList";
+import { useAppContext } from "@/app/AppContext";
 import { route } from "@/business/Helpers";
-import AppContextProvider from "@/app/AppContext";
+import { listen } from "@tauri-apps/api/event";
+import styles from "@/app/styles/page.module.scss";
+import ListLink from "@/app/list/ListLink";
+import CreateList from "@/app/list/CreateList";
 
 export default function Home() {
   const router = useRouter();
   const [todo_lists, setTodoLists] = useState<undefined | TodoList[]>(
     undefined,
   );
+  const context = useAppContext();
 
   const handleCreateList = useCallback(() => {
-    invoke<TodoList>("create_todo_list")
+    context
+      .create_todo_list()
       .then((l) => {
         route(encodeURI(`/list?id=${l.id}&new`), router).catch((e) =>
           console.error(e),
         );
       })
       .catch((e) => console.error(e));
-  }, [router]);
+  }, [context, router]);
 
-  const load = useCallback(() => {
-    invoke<TodoList[]>("pull_todo_lists").then((lists) => {
-      setTodoLists(lists);
-    });
-  }, []);
+  const load = useCallback(
+    () => context.pull_todo_lists().then((lists) => setTodoLists(lists)),
+    [context],
+  );
 
   useEffect(() => {
-    const unlisten = listen("refresh-lists", () => {
-      load();
+    const unlisten = listen("refresh-lists", async () => {
+      await load();
     });
 
     return () => {
@@ -43,19 +42,19 @@ export default function Home() {
     };
   }, [load]);
   useEffect(() => {
-    load();
-  }, [load]);
+    let loader = async () => {
+      await context.pull_todo_lists().then((lists) => setTodoLists(lists));
+    };
+    loader().catch((e) => console.error(e));
+  }, [context, load]);
 
   if (todo_lists === undefined) return <p>loading...</p>;
-
   return (
-    <AppContextProvider>
-      <div className={styles.main}>
-        {todo_lists.map((todo_list) => {
-          return <ListLink todo_list={todo_list} key={todo_list.id} />;
-        })}
-        <CreateList handleCreateList={handleCreateList} />
-      </div>
-    </AppContextProvider>
+    <div className={styles.main}>
+      {todo_lists.map((todo_list) => {
+        return <ListLink todo_list={todo_list} key={todo_list.id} />;
+      })}
+      <CreateList handleCreateList={handleCreateList} />
+    </div>
   );
 }

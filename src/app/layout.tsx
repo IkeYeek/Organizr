@@ -4,7 +4,7 @@ import "./styles/globals.scss";
 import styles from "./styles/layout.module.scss";
 import Footer from "@/app/Footer";
 import React from "react";
-import TodoListContextProvider from "@/app/list/TodoListContextProvider";
+import CSRLayout from "@/app/CSRLayout";
 import { Bell, Settings } from "react-feather";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -33,7 +33,7 @@ export default function RootLayout({
           </nav>
         </header>
         <main className={styles.main}>
-          <TodoListContextProvider content={children} />
+          <CSRLayout content={children} />
         </main>
         <footer className={styles.footer}>
           <Footer />

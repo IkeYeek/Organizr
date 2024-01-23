@@ -1,9 +1,10 @@
 "use client";
-import React, { ReactNode, useCallback, useState } from "react";
+import React, { ReactNode, useCallback } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { ArrowLeft } from "react-feather";
 import { route } from "@/business/Helpers";
-const TodoListContextProvider = ({ content }: { content: ReactNode }) => {
+import AppContextProvider from "@/app/AppContext";
+const CSRLayout = ({ content }: { content: ReactNode }) => {
   const pathname = usePathname();
   const router = useRouter();
   const back = useCallback(() => {
@@ -27,9 +28,9 @@ const TodoListContextProvider = ({ content }: { content: ReactNode }) => {
           <ArrowLeft />
         </button>
       )}
-      {content}
+      <AppContextProvider>{content}</AppContextProvider>
     </>
   );
 };
 
-export default TodoListContextProvider;
+export default CSRLayout;

@@ -18,7 +18,7 @@ fn main() {
     state.create_todo_list();
     let created_list = state.pull_list(0).unwrap();
 
-    for dummy_list_idx in 0..1000 {
+    for _ in 0..50 {
         state.create_task_in_list(created_list.id);
     }
 

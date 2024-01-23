@@ -1,59 +1,60 @@
 "use client"; // ikik next time I won't use Next for this kind of architecture I promise
 import { useCallback, useEffect, useState } from "react";
-import { Settings } from "react-feather";
 import TodoListSettings, { ListSettings } from "@/app/list/TodoListSettings";
 import styles from "./styles/page.module.scss";
-import { useRouter, useSearchParams } from "next/navigation";
-import {
-  AvailableIconsAsStrings,
-  iconEnumFromName,
-} from "@/business/AvailableIcons";
-import SimpleTodoList from "@/app/list/SimpleTodoList";
-import TodoDoneList from "@/app/list/TodoDoneList";
-import { invoke } from "@tauri-apps/api/tauri";
-import { createTodoList, TodoList, TodoListType } from "@/business/TodoList";
+import { useRouter } from "next/navigation";
+import { TodoList } from "@/business/TodoList";
 import { listen, UnlistenFn } from "@tauri-apps/api/event";
 import { route } from "@/business/Helpers";
-import { Task } from "@/business/Task";
 import TodoListComponent from "@/app/list/TodoListComponent";
+import { useAppContext } from "@/app/AppContext";
 
 const Page = () => {
   const router = useRouter();
+  const context = useAppContext();
+
   const [modalActive, setModalActive] = useState(false);
+  const [listSettings, setListSettings] = useState<undefined | ListSettings>();
   let [id, setId] = useState(NaN);
   const [list, setList] = useState<TodoList | undefined>(undefined);
+
   const loadList = useCallback(() => {
-    invoke<{
-      id: number;
-      tasks: [Task];
-      title: string;
-      icon: string;
-      list_type: string;
-    } | null>("pull_todo_list", { id }).then((tl) => {
-      if (tl === null) {
-        route("/", router).catch((e) => console.error(e));
-      } else {
-        let parsed_tl = createTodoList(
-          tl.id,
-          tl.title,
-          iconEnumFromName(tl.icon as AvailableIconsAsStrings),
-          tl.tasks.map((t) => {
-            return {
-              ...t,
-              due: t.due ? t.due * 1000 : t.due,
-            };
-          }),
-          tl.list_type as TodoListType,
-        );
-        setList(parsed_tl);
+    context
+      .pull_todo_list(id)
+      .then((resultingLits) => {
+        setList(resultingLits);
         setListSettings({
-          title: parsed_tl.title,
-          icon: parsed_tl.icon,
-          type: parsed_tl.type,
+          title: resultingLits.title,
+          icon: resultingLits.icon,
+          type: resultingLits.type,
         });
-      }
-    });
-  }, [id, router]);
+      })
+      .catch(() => route("/", router).catch((e) => console.error(e)));
+  }, [context, id, router]);
+  const updateList = useCallback(() => {
+    if (listSettings !== undefined && list !== undefined) {
+      const l: TodoList = {
+        ...list,
+        type: listSettings.type,
+        icon: listSettings.icon,
+        title: listSettings.title,
+      };
+      context.update_list(l).catch((e) => console.error(e));
+    }
+  }, [context, list, listSettings]);
+
+  const updateListSettings = useCallback(
+    (newListSettings: ListSettings) => setListSettings(newListSettings),
+    [],
+  );
+
+  const deleteList = useCallback(() => {
+    if (list !== undefined) {
+      context
+        .delete_list(id)
+        .then(() => route("/", router).catch((e) => console.error(e)));
+    }
+  }, [context, id, list, router]);
 
   useEffect(() => {
     if (isNaN(id)) {
@@ -82,20 +83,6 @@ const Page = () => {
       if (unlisten !== undefined) unlisten();
     };
   }, [list, loadList]);
-  const updateListSettings = useCallback(
-    (newListSettings: ListSettings) => setListSettings(newListSettings),
-    [],
-  );
-
-  const [listSettings, setListSettings] = useState<undefined | ListSettings>();
-  const deleteList = useCallback(() => {
-    if (list !== undefined) {
-      invoke("delete_list", {
-        id: list.id,
-      }).catch((e) => console.error(e));
-      route("/", router).catch((e) => console.error(e));
-    }
-  }, [list, router]);
 
   if (list === undefined || listSettings === undefined)
     return <p>loading...</p>;
@@ -127,15 +114,7 @@ const Page = () => {
             <button
               className="button is-success"
               onClick={() => {
-                const l = {
-                  ...list,
-                  list_type: listSettings.type,
-                  icon: listSettings.icon,
-                  title: listSettings.title,
-                };
-                invoke("update_list", {
-                  updatedList: l,
-                }).catch((e) => console.error(e));
+                updateList();
                 setModalActive(false);
               }}
             >

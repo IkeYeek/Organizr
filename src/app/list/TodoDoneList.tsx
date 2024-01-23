@@ -2,8 +2,8 @@ import { NotificationType, Task } from "@/business/Task";
 import { Plus } from "react-feather";
 import { TodoList } from "@/business/TodoList";
 import VerticalTaskComponent from "@/app/list/VerticalTaskComponent";
-import { invoke } from "@tauri-apps/api/tauri";
 import { useCallback } from "react";
+import { useAppContext } from "@/app/AppContext";
 
 const TodoDoneList = ({
   list,
@@ -12,11 +12,10 @@ const TodoDoneList = ({
   list: TodoList;
   updateTask: (task: Task) => void;
 }) => {
+  const context = useAppContext();
   const addTaskToList = useCallback(() => {
-    invoke("create_task_in_list", {
-      id: list.id,
-    }).catch((e) => console.error(e));
-  }, [list.id]);
+    context.create_task_in_list(list.id).catch((e) => console.error(e));
+  }, [context, list.id]);
 
   return (
     <div className={"columns"}>
@@ -33,29 +32,26 @@ const TodoDoneList = ({
                     updateTask(t);
                   }}
                   deleteTask={() =>
-                    invoke("delete_task_in_list", {
-                      id: list.id,
-                      tid: task.id,
-                    }).catch((e) => console.error(e))
+                    context
+                      .delete_task_in_list(list.id, task.id)
+                      .catch((e) => console.error(e))
                   }
-                  setNotificationMode={(mode: NotificationType) => {
-                    invoke("update_task_in_list", {
-                      id: list!.id,
-                      task: {
+                  setNotificationMode={(mode: NotificationType) =>
+                    context
+                      .update_task_in_list(list.id, {
                         ...task,
                         notify: mode,
-                      },
-                    }).catch((e) => console.error(e));
-                  }}
-                  switchTaskStatus={() => {
-                    invoke("update_task_in_list", {
-                      id: list!.id,
-                      task: {
+                      })
+                      .catch((e) => console.error(e))
+                  }
+                  switchTaskStatus={() =>
+                    context
+                      .update_task_in_list(list.id, {
                         ...task,
                         done: !task.done,
-                      },
-                    }).catch((e) => console.error(e));
-                  }}
+                      })
+                      .catch((e) => console.error(e))
+                  }
                 />
               );
             })}
@@ -77,28 +73,25 @@ const TodoDoneList = ({
                     updateTask(t);
                   }}
                   deleteTask={() =>
-                    invoke("delete_task_in_list", {
-                      id: list.id,
-                      tid: task.id,
-                    }).catch((e) => console.error(e))
+                    context
+                      .delete_task_in_list(list.id, task.id)
+                      .catch((e) => console.error(e))
                   }
                   setNotificationMode={(mode: NotificationType) => {
-                    invoke("update_task_in_list", {
-                      id: list!.id,
-                      task: {
+                    context
+                      .update_task_in_list(list.id, {
                         ...task,
                         notify: mode,
-                      },
-                    }).catch((e) => console.error(e));
+                      })
+                      .catch((e) => console.error(e));
                   }}
                   switchTaskStatus={() => {
-                    invoke("update_task_in_list", {
-                      id: list!.id,
-                      task: {
+                    context
+                      .update_task_in_list(list.id, {
                         ...task,
                         done: !task.done,
-                      },
-                    }).catch((e) => console.error(e));
+                      })
+                      .catch((e) => console.error(e));
                   }}
                 />
               );
