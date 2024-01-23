@@ -91,7 +91,7 @@ jobs:
             # Install frontend dependencies
             yarn 
             # Build the application
-            cargo tauri build
+            cargo tauri build --verbose
       - name: Upload deb bundle
         uses: actions/upload-artifact@v3
         with:
