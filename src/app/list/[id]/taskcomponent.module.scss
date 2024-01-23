@@ -20,4 +20,29 @@
   height: 100%;
   width: 100%;
   border: none;
+  padding: 5px;
+  display: flex;
+  align-items: center;
+}
+
+.dropdown-fh {
+  height: 100%;
+  background-color: red;
+}
+
+.contenteditable {
+  /* Use Flexbox to center the content */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+
+  /* Apply min height of 4 lines */
+  line-height: 1.2;
+  min-height: calc(1.2em * 4);
+
+  /* Border styles */
+  border: 1px solid gray;
+  border-radius: 5px;
 }
