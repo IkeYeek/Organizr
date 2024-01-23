@@ -1,4 +1,4 @@
-"use client";
+"use client"; // ikik next time I won't use Next for this kind of architecture I promise
 import { useCallback, useEffect, useState } from "react";
 import { Settings } from "react-feather";
 import TodoListSettings, { ListSettings } from "@/app/list/TodoListSettings";
@@ -15,14 +15,12 @@ import { createTodoList, TodoList, TodoListType } from "@/business/TodoList";
 import { listen, UnlistenFn } from "@tauri-apps/api/event";
 import { route } from "@/business/Helpers";
 import { Task } from "@/business/Task";
+import TodoListComponent from "@/app/list/TodoList";
 
 const Page = () => {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const [modalActive, setModalActive] = useState(
-    searchParams.get("new") !== null,
-  );
-  let [id] = useState(+searchParams.get("id")!);
+  const [modalActive, setModalActive] = useState(false);
+  let [id, setId] = useState(NaN);
   const [list, setList] = useState<TodoList | undefined>(undefined);
   const loadList = useCallback(() => {
     invoke<{
@@ -57,7 +55,22 @@ const Page = () => {
     });
   }, [id, router]);
 
-  useEffect(() => loadList(), [loadList]);
+  useEffect(() => {
+    if (isNaN(id)) {
+      const searchParams = new URLSearchParams(window.location.search); // yeahhhh so, basically having to do static export makes the use of dynamic routing impossible. Let's use useSearchParams then right ? wellll, not in page... Did I discover that long after having it working because it f*cked up arm build ? yes... so let's get to old js
+      const maybeId = searchParams.get("id");
+      if (maybeId !== null) {
+        setId(+maybeId);
+      }
+    }
+  }, [id]);
+
+  useEffect(() => {
+    if (!isNaN(id)) {
+      loadList();
+    }
+  }, [id, loadList]);
+
   useEffect(() => {
     let unlisten: UnlistenFn | undefined = undefined;
     listen<{ list_id: number }>("refresh-list", (e) => {
@@ -134,44 +147,10 @@ const Page = () => {
           </footer>
         </div>
       </div>
-      <div className={"card has-background-info"}>
-        <header className="card-header">
-          <div className="card-header-title">
-            {list.title}
-            <button
-              className={`button is-rounded is-dark ${styles["settings-icon"]}`}
-              onClick={() => setModalActive(true)}
-            >
-              <Settings />
-            </button>
-          </div>
-        </header>
-        <div className="card-content">
-          {list.type === "Todo" ? (
-            <SimpleTodoList
-              list={list}
-              updateTask={(task) => {
-                invoke("update_task_in_list", {
-                  id: list!.id,
-                  task: {
-                    ...task,
-                  },
-                }).catch((e) => console.error(e));
-              }}
-            />
-          ) : (
-            <TodoDoneList
-              list={list}
-              updateTask={(task) => {
-                invoke("update_task_in_list", {
-                  id: list!.id,
-                  task,
-                }).catch((e) => console.error(e));
-              }}
-            />
-          )}
-        </div>
-      </div>
+      <TodoListComponent
+        list={list}
+        setModalActive={() => setModalActive(true)}
+      />
     </>
   );
 };
