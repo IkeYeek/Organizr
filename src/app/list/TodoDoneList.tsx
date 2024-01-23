@@ -3,6 +3,7 @@ import { Plus } from "react-feather";
 import { TodoList } from "@/business/TodoList";
 import VerticalTaskComponent from "@/app/list/VerticalTaskComponent";
 import { invoke } from "@tauri-apps/api/tauri";
+import { useCallback } from "react";
 
 const TodoDoneList = ({
   list,
@@ -11,11 +12,11 @@ const TodoDoneList = ({
   list: TodoList;
   updateTask: (task: Task) => void;
 }) => {
-  const addTaskToList = () => {
+  const addTaskToList = useCallback(() => {
     invoke("create_task_in_list", {
       id: list.id,
     }).catch((e) => console.error(e));
-  };
+  }, [list.id]);
 
   return (
     <div className={"columns"}>

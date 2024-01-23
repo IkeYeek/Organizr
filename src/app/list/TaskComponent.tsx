@@ -1,6 +1,6 @@
 "use client";
 import { NotificationType, Task } from "@/business/Task";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Bell, BellOff, Check, Trash, X } from "react-feather";
 import styles from "./styles/taskcomponent.module.scss";
 import TaskInput from "@/app/list/TaskInput";
@@ -43,14 +43,17 @@ const TaskComponent = ({
   const [calendar, setCalendar] = useState<any | undefined>(undefined);
   const calendarRef = useRef<HTMLInputElement>(null);
 
-  const setNotificationMode = (
-    e: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
-    type: NotificationType,
-  ) => {
-    e.stopPropagation();
-    _setNotificationMode(type);
-    __setNotificationMode(type);
-  };
+  const setNotificationMode = useCallback(
+    (
+      e: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
+      type: NotificationType,
+    ) => {
+      e.stopPropagation();
+      _setNotificationMode(type);
+      __setNotificationMode(type);
+    },
+    [__setNotificationMode],
+  );
 
   useEffect(() => {
     if (calendarRef.current !== null && calendar === undefined) {

@@ -3,6 +3,7 @@ import { Plus } from "react-feather";
 import { NotificationType, Task } from "@/business/Task";
 import TaskComponent from "@/app/list/TaskComponent";
 import { invoke } from "@tauri-apps/api/tauri";
+import { useCallback } from "react";
 
 const SimpleTodoList = ({
   list,
@@ -11,11 +12,11 @@ const SimpleTodoList = ({
   list: TodoList;
   updateTask: (task: Task) => void;
 }) => {
-  const addTaskToList = () => {
+  const addTaskToList = useCallback(() => {
     invoke("create_task_in_list", {
       id: list.id,
     }).catch((e) => console.error(e));
-  };
+  }, [list.id]);
 
   return (
     <>

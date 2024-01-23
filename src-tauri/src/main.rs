@@ -3,6 +3,7 @@
 
 use tauri::{generate_handler};
 use crate::storage::{NonPersistentStorage, Storage};
+use crate::task::{NotificationType, Task};
 
 mod todo_list;
 mod task;
@@ -14,6 +15,12 @@ fn main() {
     std::env::set_var("RUST_LOG", "debug");
     env_logger::init();
     let state = NonPersistentStorage::new();
+    state.create_todo_list();
+    let created_list = state.pull_list(0).unwrap();
+
+    for dummy_list_idx in 0..1000 {
+        state.create_task_in_list(created_list.id);
+    }
 
     tauri::Builder::default()
         .manage(state)

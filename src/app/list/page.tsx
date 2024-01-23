@@ -88,17 +88,17 @@ const Page = () => {
   );
 
   const [listSettings, setListSettings] = useState<undefined | ListSettings>();
+  const deleteList = useCallback(() => {
+    if (list !== undefined) {
+      invoke("delete_list", {
+        id: list.id,
+      }).catch((e) => console.error(e));
+      route("/", router).catch((e) => console.error(e));
+    }
+  }, [list, router]);
 
   if (list === undefined || listSettings === undefined)
     return <p>loading...</p>;
-
-  const deleteList = () => {
-    invoke("delete_list", {
-      id: list.id,
-    }).catch((e) => console.error(e));
-    route("/", router).catch((e) => console.error(e));
-  };
-
   return (
     <>
       <div className={"modal " + (modalActive ? "is-active" : "")}>
