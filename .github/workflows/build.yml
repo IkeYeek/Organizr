@@ -8,7 +8,7 @@ on:
 jobs:
   release:
     permissions:
-      contents: write-all
+      contents: write
     strategy:
       fail-fast: false
       matrix:
@@ -58,7 +58,7 @@ jobs:
   release-arm:
     runs-on: ubuntu-latest
     permissions:
-      contents: write-all
+      contents: write
     steps:
       - uses: actions/checkout@v3
       - uses: pguyot/arm-runner-action@v2.5.2
