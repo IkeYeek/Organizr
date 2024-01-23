@@ -28,8 +28,11 @@ jobs:
         with:
           rust-version: stable
       - name: Lint Rust Backend
-        run: cargo clippy -- -D warnings -W clippy::pedantic  --manifest-path=src-tauri/cargo.toml
+        run: |
+          cd src-tauri 
+          cargo clippy -- -D warnings -W clippy::pedantic 
+          cd ..
 
       - name: Build Tauri App
-        run: cargo tauri build
+        run: yarn tauri build
 
