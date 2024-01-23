@@ -59,11 +59,16 @@ jobs:
         run: yarn install
       - name: Build Tauri App
         run: yarn tauri build
+      - name: move targets
+        run: | 
+          mkdir temp_builds 
+          mv src-tauri/target/release/bundle/appimage/*.AppImage temp_builds
+          mv src-tauri/target/release/bundle/deb/*.deb temp_builds
       - name: Deploy builds to repo
         uses: s0/git-publish-subdir-action@develop
         env:
           REPO: self
           BRANCH: main
-          FOLDER: src-tauri/target/release/bundle/
+          FOLDER: temp_builds
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TARGET_DIR: builds
