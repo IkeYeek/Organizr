@@ -15,7 +15,6 @@ pub(crate) trait Storage {
     fn update_task_in_list(&self, list_id: usize, task: Task);
     fn delete_task_in_list(&self, list_id: usize, task_id: usize);
 }
-
 pub(crate) struct NonPersistentStorage {
     task_idx: Mutex<usize>,
     lists: Mutex<Vec<TodoList>>,

@@ -18,7 +18,6 @@ const SimpleTodoList = ({
     invoke("create_task_in_list", {
       id: list.id,
     }).catch((e) => console.error(e));
-    //context.insertTaskInList(list, createTask());
   };
 
   const showTodoFirst = (tasks: Task[]): Task[] => {

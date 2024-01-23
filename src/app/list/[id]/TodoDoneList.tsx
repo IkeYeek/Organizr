@@ -5,6 +5,7 @@ import { useContext } from "react";
 import TodoListContext from "@/app/list/TodoListContext";
 import { TodoList } from "@/business/TodoList";
 import VerticalTaskComponent from "@/app/list/[id]/VerticalTaskComponent";
+import { invoke } from "@tauri-apps/api/tauri";
 
 const TodoDoneList = ({
   list,
@@ -15,7 +16,9 @@ const TodoDoneList = ({
 }) => {
   const context = useContext(TodoListContext);
   const addTaskToList = () => {
-    context.insertTaskInList(list, createTask());
+    invoke("create_task_in_list", {
+      id: list.id,
+    }).catch((e) => console.error(e));
   };
 
   const showTodoFirst = (tasks: Task[]): Task[] => {
@@ -47,18 +50,36 @@ const TodoDoneList = ({
                   updateTask={(t) => {
                     updateTask(t);
                   }}
-                  deleteTask={() => context.deleteTaskInList(list, task)}
-                  setNotificationMode={(mode: NotificationType) =>
-                    context.updateTaskInList(list, {
-                      ...task,
-                      notify: mode,
-                    })
+                  deleteTask={() =>
+                    invoke("delete_task_in_list", {
+                      id: list.id,
+                      tid: task.id,
+                    }).catch((e) => console.error(e))
                   }
-                  switchTaskStatus={() =>
-                    context.updateTaskInList(list, {
-                      ...task,
-                      done: !task.done,
-                    })
+                  setNotificationMode={(mode: NotificationType) => {
+                    console.log("...");
+                    invoke("update_task_in_list", {
+                      id: list!.id,
+                      task: {
+                        ...task,
+                        notify: mode,
+                      },
+                    }).catch((e) => console.error(e));
+                  }}
+                  switchTaskStatus={
+                    () => {
+                      invoke("update_task_in_list", {
+                        id: list!.id,
+                        task: {
+                          ...task,
+                          done: !task.done,
+                        },
+                      }).catch((e) => console.error(e));
+                    }
+                    /*context.updateTaskInList(list, {
+                          ...task,
+                          done: !task.done,
+                        })*/
                   }
                 />
               );
@@ -80,18 +101,36 @@ const TodoDoneList = ({
                   updateTask={(t) => {
                     updateTask(t);
                   }}
-                  deleteTask={() => context.deleteTaskInList(list, task)}
-                  setNotificationMode={(mode: NotificationType) =>
-                    context.updateTaskInList(list, {
-                      ...task,
-                      notify: mode,
-                    })
+                  deleteTask={() =>
+                    invoke("delete_task_in_list", {
+                      id: list.id,
+                      tid: task.id,
+                    }).catch((e) => console.error(e))
                   }
-                  switchTaskStatus={() =>
-                    context.updateTaskInList(list, {
+                  setNotificationMode={(mode: NotificationType) => {
+                    console.log("...");
+                    invoke("update_task_in_list", {
+                      id: list!.id,
+                      task: {
+                        ...task,
+                        notify: mode,
+                      },
+                    }).catch((e) => console.error(e));
+                  }}
+                  switchTaskStatus={
+                    () => {
+                      invoke("update_task_in_list", {
+                        id: list!.id,
+                        task: {
+                          ...task,
+                          done: !task.done,
+                        },
+                      }).catch((e) => console.error(e));
+                    }
+                    /*context.updateTaskInList(list, {
                       ...task,
                       done: !task.done,
-                    })
+                    })*/
                   }
                 />
               );
