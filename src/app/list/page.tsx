@@ -22,6 +22,7 @@ import {
 import { listen, UnlistenFn } from "@tauri-apps/api/event";
 import { unsubscribe } from "diagnostics_channel";
 import { route } from "@/business/Helpers";
+import { NotificationType } from "@/business/Task";
 
 const Page = () => {
   const router = useRouter();
@@ -29,6 +30,7 @@ const Page = () => {
   const [modalActive, setModalActive] = useState(
     searchParams.get("new") !== null,
   );
+  let [t, st] = useState(false);
   let [id, setId] = useState(+searchParams.get("id")!);
   const context = useContext(TodoListContext);
   const [list, setList] = useState<TodoList | undefined>(undefined);
@@ -51,6 +53,7 @@ const Page = () => {
           tl.list_type as TodoListType,
         );
         setList(parsed_tl);
+        console.log(parsed_tl.tasks);
         setListSettings({
           title: parsed_tl.title,
           icon: parsed_tl.icon,
@@ -73,7 +76,7 @@ const Page = () => {
     };
   }, [list, loadList]);
   const updateListSettings = useCallback(
-    () => (newListSettings: ListSettings) => setListSettings(newListSettings),
+    (newListSettings: ListSettings) => setListSettings(newListSettings),
     [],
   );
 
@@ -158,7 +161,6 @@ const Page = () => {
                   id: list!.id,
                   task,
                 }).catch((e) => console.error(e));
-                //context.updateTaskInList(list, task);
               }}
             />
           ) : (

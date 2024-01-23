@@ -31,6 +31,12 @@ const TaskComponent = ({
   const [title, setTitle] = useState(task.title);
   const [notificationMenuActive, setNotificationMenuActive] = useState(false);
   const [notificationMode, _setNotificationMode] = useState(task.notify);
+  useEffect(() => {
+    _setNotificationMode(task.notify);
+  }, [task.notify]);
+  useEffect(() => {
+    setTitle(task.title);
+  }, [task.title]);
   const [textAreaElement, setTextAreaElement] =
     useState<HTMLTextAreaElement | null>(null);
   const [textAreaFocused, setTextAreaFocused] = useState(false);

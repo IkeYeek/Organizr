@@ -28,7 +28,9 @@ export default function Home() {
   const handleCreateList = useCallback(() => {
     invoke<TodoList>("create_todo_list")
       .then((l) => {
-        route(`/list?id=${l.id}&new}`, router).catch((e) => console.error(e));
+        route(encodeURI(`/list?id=${l.id}&new`), router).catch((e) =>
+          console.error(e),
+        );
       })
       .catch((e) => console.error(e));
   }, [router]);

@@ -8,7 +8,7 @@ use chrono::serde::ts_seconds_option;
 #[derive(Debug, serde::Serialize, serde::Deserialize, Clone)]
 pub enum NotificationType {
     None,
-    NonIntrusive,
+    Non_Intrusive,
     Intrusive,
 }
 
@@ -17,7 +17,7 @@ impl Display for NotificationType {
         match self {
             NotificationType::Intrusive => write!(f, "Intrusive"),
             NotificationType::None => write!(f, "None"),
-            NotificationType::NonIntrusive => write!(f, "NonIntrusive"),
+            NotificationType::Non_Intrusive => write!(f, "NonIntrusive"),
         }
     }
 }

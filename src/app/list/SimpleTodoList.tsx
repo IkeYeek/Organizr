@@ -54,7 +54,6 @@ const SimpleTodoList = ({
                 }).catch((e) => console.error(e))
               }
               setNotificationMode={(mode: NotificationType) => {
-                console.log("...");
                 invoke("update_task_in_list", {
                   id: list!.id,
                   task: {
@@ -63,21 +62,15 @@ const SimpleTodoList = ({
                   },
                 }).catch((e) => console.error(e));
               }}
-              switchTaskStatus={
-                () => {
-                  invoke("update_task_in_list", {
-                    id: list!.id,
-                    task: {
-                      ...task,
-                      done: !task.done,
-                    },
-                  }).catch((e) => console.error(e));
-                }
-                /*context.updateTaskInList(list, {
-                  ...task,
-                  done: !task.done,
-                })*/
-              }
+              switchTaskStatus={() => {
+                invoke("update_task_in_list", {
+                  id: list!.id,
+                  task: {
+                    ...task,
+                    done: !task.done,
+                  },
+                }).catch((e) => console.error(e));
+              }}
             />
           );
         })}

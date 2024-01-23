@@ -12,7 +12,7 @@ struct PullListPayload {
 }
 
 #[tauri::command]
-pub(crate) fn pull_todo_lists(app_handle: AppHandle, state: tauri::State<NonPersistentStorage>) -> Vec<TodoList> {
+pub(crate) fn pull_todo_lists(state: tauri::State<NonPersistentStorage>) -> Vec<TodoList> {
     debug!("commands::pull_todo_lists");
     state.pull()
 }
@@ -28,7 +28,7 @@ pub(crate) fn create_todo_list(app_handle: AppHandle, state: tauri::State<NonPer
 }
 
 #[tauri::command]
-pub(crate) fn pull_todo_list(id: usize, app_handle: AppHandle, state: tauri::State<NonPersistentStorage>) -> Option<TodoList> {
+pub(crate) fn pull_todo_list(id: usize, state: tauri::State<NonPersistentStorage>) -> Option<TodoList> {
     debug!("commands::pull_todo_list");
     state.pull_list(id)
 }
@@ -44,7 +44,8 @@ pub(crate) fn create_task_in_list(id: usize, app_handle: AppHandle, state: tauri
 pub(crate) fn update_list(updated_list: TodoList, app_handle: AppHandle, state: tauri::State<NonPersistentStorage>) {
     debug!("commands::update_list");
     let id = updated_list.id;
-    state.update_list(updated_list);
+    state.update_list(updated_list.clone());
+    println!("{}", updated_list);
     evt_refresh_list(id, app_handle);
 }
 #[tauri::command]

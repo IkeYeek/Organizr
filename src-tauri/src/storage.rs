@@ -1,4 +1,3 @@
-use std::ops::Deref;
 use std::sync::Mutex;
 use crate::task::{NotificationType, Task};
 use crate::todo_list::{AvailableIcons, TodoList, TodoListType};
@@ -16,9 +15,9 @@ pub(crate) trait Storage {
     fn delete_task_in_list(&self, list_id: usize, task_id: usize);
 }
 pub(crate) struct NonPersistentStorage {
+    list_idx: Mutex<usize>,
     task_idx: Mutex<usize>,
     lists: Mutex<Vec<TodoList>>,
-    list_idx: Mutex<usize>,
 }
 
 impl Storage for NonPersistentStorage {

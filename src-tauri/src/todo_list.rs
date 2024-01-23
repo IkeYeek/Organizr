@@ -1,7 +1,6 @@
 use fmt::Display;
 use std::fmt;
 use std::fmt::{Formatter};
-use std::ops::Deref;
 use crate::task::Task;
 #[derive(Debug, serde::Serialize, serde::Deserialize, Clone)]
 pub enum TodoListType {
