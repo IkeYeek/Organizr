@@ -9,6 +9,7 @@ import {
 } from "@/business/AvailableIcons";
 import styles from "./settings.module.scss";
 import NoIcon from "@/app/list/[id]/NoIcon";
+import EnhancedTextInput from "@/business/EnhancedTextInput";
 
 export type ListSettings = {
   title: string;
@@ -60,12 +61,14 @@ const TodoListSettings = ({
             name
           </label>
           <div className="control">
-            <input
-              type="text"
-              className="input"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-            />
+            <EnhancedTextInput>
+              <input
+                type="text"
+                className="input"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+              />
+            </EnhancedTextInput>
           </div>
         </div>
         <div className="buttons has-addons">

@@ -1,0 +1,19 @@
+.active-input {
+  position: fixed;
+  top: 30px;
+  width: 80vw;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 4;
+}
+
+.active-background {
+  background-color: rgba(255, 224, 138, 0.3);
+  backdrop-filter: blur(2px);
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 3;
+}

@@ -104,7 +104,17 @@ const TodoListContextProvider = ({ content }: { content: ReactNode }) => {
       }}
     >
       {pathname !== "/" && (
-        <button onClick={() => back()}>
+        <button
+          className={"button has-background-info"}
+          style={{
+            border: "none",
+            borderRadius: 0,
+            position: "relative",
+            top: 3,
+            zIndex: 2,
+          }}
+          onClick={() => back()}
+        >
           <ArrowLeft />
         </button>
       )}

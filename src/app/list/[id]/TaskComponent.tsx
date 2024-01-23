@@ -2,6 +2,7 @@ import { NotificationType, Task } from "@/business/Task";
 import React, { useEffect, useRef, useState } from "react";
 import { Bell, BellOff, Check, Trash, X } from "react-feather";
 import styles from "./taskcomponent.module.scss";
+import EnhancedTextInput from "@/business/EnhancedTextInput";
 
 const TaskComponent = ({
   task,
@@ -54,30 +55,32 @@ const TaskComponent = ({
           </button>
         </div>
         <div className={`control column is-10 ${styles["input-container"]}`}>
-          <textarea
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            className={`has-background-grey-dark ${styles.input}`}
-            ref={textAreaRef}
-            contentEditable
-            onFocus={() => setTextAreaFocused(true)}
-            style={{
-              height: "auto",
-              minHeight:
-                textAreaElement !== null
-                  ? textAreaFocused
-                    ? textAreaElement.scrollHeight
-                    : Math.min(textAreaElement.scrollHeight, 100)
-                  : 0,
-            }}
-            onBlur={() => {
-              updateTask({
-                ...task,
-                title: title,
-              });
-              setTextAreaFocused(false);
-            }}
-          />
+          <EnhancedTextInput>
+            <textarea
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              className={`has-background-grey-dark ${styles.input}`}
+              ref={textAreaRef}
+              contentEditable
+              onFocus={() => setTextAreaFocused(true)}
+              style={{
+                height: "auto",
+                minHeight:
+                  textAreaElement !== null
+                    ? textAreaFocused
+                      ? textAreaElement.scrollHeight
+                      : Math.min(textAreaElement.scrollHeight, 100)
+                    : 0,
+              }}
+              onBlur={() => {
+                updateTask({
+                  ...task,
+                  title: title,
+                });
+                setTextAreaFocused(false);
+              }}
+            />
+          </EnhancedTextInput>
         </div>
         <div className="control column is-0">
           <div
