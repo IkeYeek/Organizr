@@ -66,7 +66,7 @@ const VerticalTaskComponent = ({
           </button>
         </div>
         <div className={`control${styles["input-container"]}`}>
-          <EnhancedTextInput>
+          <EnhancedTextInput value={title} onChange={(e) => setTitle(e)}>
             <textarea
               value={title}
               onChange={(e) => setTitle(e.target.value)}

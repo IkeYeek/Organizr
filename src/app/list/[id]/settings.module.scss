@@ -9,4 +9,6 @@
 .dropdown-content-style {
   position: fixed;
   z-index: 20;
+  overflow: scroll;
+  max-height: 200px;
 }

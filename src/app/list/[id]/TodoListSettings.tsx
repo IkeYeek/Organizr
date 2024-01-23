@@ -61,7 +61,7 @@ const TodoListSettings = ({
             name
           </label>
           <div className="control">
-            <EnhancedTextInput>
+            <EnhancedTextInput value={title} onChange={(e) => setTitle(e)}>
               <input
                 type="text"
                 className="input"
@@ -107,7 +107,7 @@ const TodoListSettings = ({
               <div className="dropdown-trigger">
                 {matchIconWithElement(icon) || <NoIcon />}
               </div>
-              <div className="dropdown-menu" id="dropdown-menu3" role="menu">
+              <div className="dropdown-menu" role="menu">
                 <div
                   className={`dropdown-content ${styles["dropdown-content-style"]}`}
                 >
