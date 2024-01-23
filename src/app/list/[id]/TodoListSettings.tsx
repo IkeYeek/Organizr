@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useState } from "react";
+"use client";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { TodoListType } from "@/business/TodoList";
 import {
   AvailableIcons,
@@ -7,7 +8,6 @@ import {
   matchIconWithElement,
 } from "@/business/AvailableIcons";
 import styles from "./settings.module.scss";
-import { Check, Slash, X } from "react-feather";
 import NoIcon from "@/app/list/[id]/NoIcon";
 
 export type ListSettings = {
@@ -31,6 +31,9 @@ const TodoListSettings = ({
   const [title, setTitle] = useState(listSettings.title);
   const [type, setType] = useState(listSettings.type);
   const [icon, setIcon] = useState(listSettings.icon);
+  const [iconDropdownActive, setIconDropdownActive] = useState(false);
+
+  const testRef = useRef<HTMLDivElement | undefined>();
 
   const initValues = useCallback(() => {
     setTitle(listSettings.title);
@@ -92,17 +95,18 @@ const TodoListSettings = ({
             icon
           </label>
           <div className="control">
-            <div className="dropdown is-hoverable">
+            <div
+              className={`dropdown ${iconDropdownActive ? "is-active" : ""}`}
+              onPointerDown={(e) => {
+                setIconDropdownActive(true);
+              }}
+            >
               <div className="dropdown-trigger">
                 {matchIconWithElement(icon) || <NoIcon />}
               </div>
               <div className="dropdown-menu" id="dropdown-menu3" role="menu">
                 <div
-                  className="dropdown-content"
-                  style={{
-                    position: "fixed",
-                    zIndex: 20,
-                  }}
+                  className={`dropdown-content ${styles["dropdown-content-style"]}`}
                 >
                   {Object.keys(AvailableIcons)
                     .filter((v) => isNaN(Number(v)))
@@ -111,11 +115,12 @@ const TodoListSettings = ({
                         <a
                           className={"dropdown-item"}
                           key={e}
-                          onClick={() =>
+                          onClick={() => {
                             setIcon(
                               iconEnumFromName(e as AvailableIconsAsStrings),
-                            )
-                          }
+                            );
+                            setIconDropdownActive(false);
+                          }}
                         >
                           {matchIconWithElement(
                             iconEnumFromName(e as AvailableIconsAsStrings),

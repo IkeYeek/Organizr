@@ -1,5 +1,5 @@
 "use client";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import TodoListContext from "@/app/list/TodoListContext";
 import { Settings } from "react-feather";
 import TodoListSettings, {
@@ -20,7 +20,9 @@ const Page = ({ params }: { params: { id: number } }) => {
   const context = useContext(TodoListContext);
   const lists = context.lists;
   const list = lists.filter((list) => list.id === +params.id).pop()!;
-  if (list === undefined) router.push("/");
+  useEffect(() => {
+    if (list === undefined) router.push("/");
+  }, [list, router]);
   const deleteList = () => {
     context.deleteList(list);
   };
