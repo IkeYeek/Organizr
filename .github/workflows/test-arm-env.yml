@@ -15,6 +15,10 @@ jobs:
           image_additional_mb: 10240
           optimize_image: false
           commands: |
+            apt update -y --allow-releaseinfo-change
+            apt upgrade -y
+            apt autoremove -y
+            apt install file
             touch test.txt
             echo "text" > test.txt
             file test.txt
