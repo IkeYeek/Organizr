@@ -2,10 +2,13 @@ import { useCallback, useEffect, useState } from "react";
 import { TodoListType } from "@/business/TodoList";
 import {
   AvailableIcons,
+  AvailableIconsAsStrings,
   iconEnumFromName,
   matchIconWithElement,
 } from "@/business/AvailableIcons";
 import styles from "./settings.module.scss";
+import { Slash } from "react-feather";
+import NoIcon from "@/app/list/[id]/NoIcon";
 
 export type ListSettings = {
   title: string;
@@ -88,10 +91,16 @@ const TodoListSettings = ({
         <div className="control">
           <div className="dropdown is-hoverable">
             <div className="dropdown-trigger">
-              {matchIconWithElement(icon) || "no icon"}
+              {matchIconWithElement(icon) || <NoIcon />}
             </div>
             <div className="dropdown-menu" id="dropdown-menu3" role="menu">
-              <div className="dropdown-content">
+              <div
+                className="dropdown-content"
+                style={{
+                  position: "fixed",
+                  zIndex: 20,
+                }}
+              >
                 {Object.keys(AvailableIcons)
                   .filter((v) => isNaN(Number(v)))
                   .map((e) => {
@@ -101,13 +110,13 @@ const TodoListSettings = ({
                         key={e}
                         onClick={() =>
                           setIcon(
-                            iconEnumFromName(e as "None" | "Camera" | "Trash"),
+                            iconEnumFromName(e as AvailableIconsAsStrings),
                           )
                         }
                       >
                         {matchIconWithElement(
-                          iconEnumFromName(e as "None" | "Camera" | "Trash"),
-                        ) || "no icon"}
+                          iconEnumFromName(e as AvailableIconsAsStrings),
+                        ) || <NoIcon />}
                       </a>
                     );
                   })}
