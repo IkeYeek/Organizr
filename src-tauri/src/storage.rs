@@ -85,15 +85,13 @@ impl Storage for NonPersistentStorage {
 
     fn update_task_in_list(&self, list_id: usize, task: Task) {
         let mut lists = self.lists.lock().unwrap();
-        let list_idx = lists.iter().position(|l| l.id == list_id).unwrap();
-        let task_idx = lists[list_idx].tasks.0.iter().position(|t| t.id == task.id).unwrap();
-        lists[list_idx].tasks.0[task_idx] = task;
+        let list = lists.iter_mut().find(|l| l.id == list_id).expect("Todo: handle this");
+        list.update_task(task);
     }
 
     fn delete_task_in_list(&self, list_id: usize, task_id: usize) {
         let mut lists = self.lists.lock().unwrap();
-        let list_idx = lists.iter().position(|l| l.id == list_id).unwrap();
-        let task_idx = lists[list_idx].tasks.0.iter().position(|t| t.id == task_id).unwrap();
-        lists[list_idx].tasks.0.remove(task_idx);
+        let list = lists.iter_mut().find(|l| l.id == list_id).expect("Todo: handle this");
+        list.remove_task(task_id);
     }
 }

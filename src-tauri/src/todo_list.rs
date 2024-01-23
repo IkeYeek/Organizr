@@ -68,12 +68,17 @@ impl TodoList {
 
     pub fn update_task(&mut self, updated_task: Task) {
         if let Some(existing_task_idx) = self.tasks.0.iter().position(|task| task.id == updated_task.id) {
-            // Replace the existing task with the updated_task
             self.tasks.0[existing_task_idx] = updated_task;
         } else {
-            // Handle the case where the task with the same id is not found
-            // You might want to log a message or raise an error here based on your requirements.
-            println!("Task with id {} not found in the list.", updated_task.id);
+            panic!("Task with id {} not found in the list.", updated_task.id);
+        }
+    }
+
+    pub fn remove_task(&mut self, tid: usize) {
+        if let Some(existing_task) = self.tasks.0.iter().position(|t| t.id == tid) {
+            self.tasks.0.remove(existing_task);
+        } else {
+            panic!("Todo: handle this");
         }
     }
 

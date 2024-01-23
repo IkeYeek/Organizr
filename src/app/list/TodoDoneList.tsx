@@ -57,7 +57,6 @@ const TodoDoneList = ({
                     }).catch((e) => console.error(e))
                   }
                   setNotificationMode={(mode: NotificationType) => {
-                    console.log("...");
                     invoke("update_task_in_list", {
                       id: list!.id,
                       task: {
@@ -108,7 +107,6 @@ const TodoDoneList = ({
                     }).catch((e) => console.error(e))
                   }
                   setNotificationMode={(mode: NotificationType) => {
-                    console.log("...");
                     invoke("update_task_in_list", {
                       id: list!.id,
                       task: {

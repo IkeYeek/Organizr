@@ -53,7 +53,6 @@ const Page = () => {
           tl.list_type as TodoListType,
         );
         setList(parsed_tl);
-        console.log(parsed_tl.tasks);
         setListSettings({
           title: parsed_tl.title,
           icon: parsed_tl.icon,
@@ -88,7 +87,7 @@ const Page = () => {
   const deleteList = () => {
     invoke("delete_list", {
       id: list.id,
-    }).catch((e) => console.log(e));
+    }).catch((e) => console.error(e));
     route("/", router).catch((e) => console.error(e));
   };
 

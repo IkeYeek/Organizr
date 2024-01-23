@@ -17,14 +17,6 @@ fn main() {
 
     tauri::Builder::default()
         .manage(state)
-        .setup(|app| {
-            let local_window = tauri::WindowBuilder::new(
-                app,
-                "OtherOne",
-                tauri::WindowUrl::App("/".into())
-            ).build()?;
-            Ok(())
-        })
         .invoke_handler(generate_handler![api::create_todo_list, api::pull_todo_list, api::pull_todo_lists, api::create_task_in_list, api::update_list, api::update_task_in_list, api::delete_task_in_list, api::delete_list])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
