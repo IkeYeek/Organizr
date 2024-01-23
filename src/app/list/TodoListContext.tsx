@@ -11,6 +11,7 @@ type TodoListContextType = {
   deleteList: (list: TodoList) => void;
 
   insertTaskInList: (list: TodoList, item: Task) => void;
+
   updateTaskInList: (list: TodoList, task: Task) => void;
   deleteTaskInList: (list: TodoList, task: Task) => void;
   switchTaskStateInList: (list: TodoList, task: Task) => void;

@@ -7,6 +7,7 @@ import Footer from "@/app/Footer";
 import React from "react";
 import { useRouter } from "next/navigation";
 import TodoListContextProvider from "@/app/list/TodoListContextProvider";
+import { Bell, Settings } from "react-feather";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -23,7 +24,16 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.className} ${styles.body}`}>
-        <header className={styles.header}>header</header>
+        <header className={styles.header}>
+          <nav>
+            <a href="#">
+              <Bell size={35} />
+            </a>
+            <a href="#">
+              <Settings size={35} />
+            </a>
+          </nav>
+        </header>
         <main className={styles.main}>
           <TodoListContextProvider content={children} />
         </main>

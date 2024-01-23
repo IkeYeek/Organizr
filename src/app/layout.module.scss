@@ -9,6 +9,21 @@
 .header {
   background-color: #581D59;
   height: 8%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+
+}
+
+.header > nav {
+  float: right;
+  position: relative;
+  right: 10px;
+}
+
+.header a {
+  color: black;
+  margin-left: 30px;
 }
 
 .footer {
