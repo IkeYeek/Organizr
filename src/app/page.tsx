@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import { invoke } from "@tauri-apps/api/tauri";
 import { listen } from "@tauri-apps/api/event";
 import { route } from "@/business/Helpers";
+import AppContextProvider from "@/app/AppContext";
 
 export default function Home() {
   const router = useRouter();
@@ -48,11 +49,13 @@ export default function Home() {
   if (todo_lists === undefined) return <p>loading...</p>;
 
   return (
-    <div className={styles.main}>
-      {todo_lists.map((todo_list) => {
-        return <ListLink todo_list={todo_list} key={todo_list.id} />;
-      })}
-      <CreateList handleCreateList={handleCreateList} />
-    </div>
+    <AppContextProvider>
+      <div className={styles.main}>
+        {todo_lists.map((todo_list) => {
+          return <ListLink todo_list={todo_list} key={todo_list.id} />;
+        })}
+        <CreateList handleCreateList={handleCreateList} />
+      </div>
+    </AppContextProvider>
   );
 }
