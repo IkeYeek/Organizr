@@ -14,12 +14,6 @@ fn main() {
     std::env::set_var("RUST_LOG", "debug");
     env_logger::init();
     let state = NonPersistentStorage::new();
-    state.create_todo_list();
-    let created_list = state.pull_list(0).unwrap();
-
-    for _ in 0..50 {
-        state.create_task_in_list(created_list.id);
-    }
 
     tauri::Builder::default()
         .manage(state)
