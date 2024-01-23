@@ -44,9 +44,10 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
-        steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v2
+      - name: Setup Rust
+        uses: ATiltedTree/setup-rust@v1
+        with:
+          rust-version: stable
       - name: Build Tauri App
         run: yarn tauri build
 
