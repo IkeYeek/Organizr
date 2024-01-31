@@ -2,7 +2,7 @@ use chrono::{ TimeZone, Utc};
 use log::debug;
 use serde::{Deserialize, Serialize};
 use tauri::{AppHandle, Manager};
-use crate::storage::{NonPersistentStorage, Storage};
+use crate::storage::{Storage};
 use crate::task::{NotificationType, Task};
 use crate::todo_list::TodoList;
 
@@ -24,13 +24,13 @@ struct PullListPayload {
 }
 #[allow(clippy::needless_pass_by_value)]
 #[tauri::command]
-pub(crate) fn pull_todo_lists(state: tauri::State<NonPersistentStorage>) -> Vec<TodoList> {
+pub(crate) fn pull_todo_lists(state: tauri::State<impl Storage>) -> Vec<TodoList> {
     debug!("commands::pull_todo_lists");
     state.pull()
 }
 #[allow(clippy::needless_pass_by_value)]
 #[tauri::command]
-pub(crate) fn create_todo_list(app_handle: AppHandle, state: tauri::State<NonPersistentStorage>) -> TodoList {
+pub(crate) fn create_todo_list(app_handle: AppHandle, state: tauri::State<impl Storage>) -> TodoList {
     debug!("commands::create_todo_list");
     let created_list_id = state.create_todo_list();
 
@@ -40,27 +40,27 @@ pub(crate) fn create_todo_list(app_handle: AppHandle, state: tauri::State<NonPer
 }
 #[allow(clippy::needless_pass_by_value)]
 #[tauri::command]
-pub(crate) fn pull_todo_list(id: usize, state: tauri::State<NonPersistentStorage>) -> Option<TodoList> {
+pub(crate) fn pull_todo_list(id: usize, state: tauri::State<impl Storage>) -> Option<TodoList> {
     debug!("commands::pull_todo_list");
     state.pull_list(id)
 }
 #[allow(clippy::needless_pass_by_value)]
 #[tauri::command]
-pub(crate) fn create_task_in_list(id: usize, app_handle: AppHandle, state: tauri::State<NonPersistentStorage>) {
+pub(crate) fn create_task_in_list(id: usize, app_handle: AppHandle, state: tauri::State<impl Storage>) {
     debug!("commands::create_task_in_list");
     state.create_task_in_list(id);
     evt_refresh_list(id, app_handle);
 }
 #[allow(clippy::needless_pass_by_value)]
 #[tauri::command]
-pub(crate) fn update_list(updated_list: TodoList, app_handle: AppHandle, state: tauri::State<NonPersistentStorage>) {
+pub(crate) fn update_list(updated_list: TodoList, app_handle: AppHandle, state: tauri::State<impl Storage>) {
     debug!("commands::update_list");
     let id = updated_list.id;
     state.update_list(updated_list.clone());
     evt_refresh_list(id, app_handle);
 }#[allow(clippy::needless_pass_by_value)]
 #[tauri::command]
-pub(crate) fn update_task_in_list(id: usize, task: JSTask, app_handle: AppHandle, state: tauri::State<NonPersistentStorage>) {
+pub(crate) fn update_task_in_list(id: usize, task: JSTask, app_handle: AppHandle, state: tauri::State<impl Storage>) {
     debug!("commands::update_task_in_list");
     state.update_task_in_list(id, Task {
         id: task.id,
@@ -74,14 +74,14 @@ pub(crate) fn update_task_in_list(id: usize, task: JSTask, app_handle: AppHandle
 
 #[allow(clippy::needless_pass_by_value)]
 #[tauri::command]
-pub(crate) fn delete_task_in_list(id: usize, tid: usize, app_handle: AppHandle, state: tauri::State<NonPersistentStorage>) {
+pub(crate) fn delete_task_in_list(id: usize, tid: usize, app_handle: AppHandle, state: tauri::State<impl Storage>) {
     debug!("commands::delete_task_in_list");
     state.delete_task_in_list(id, tid);
     evt_refresh_list(id, app_handle);
 }
 #[allow(clippy::needless_pass_by_value)]
 #[tauri::command]
-pub(crate) fn delete_list(id: usize, app_handle: AppHandle, state: tauri::State<NonPersistentStorage>) {
+pub(crate) fn delete_list(id: usize, app_handle: AppHandle, state: tauri::State<impl Storage>) {
     debug!("commands::delete_list");
     state.delete_list(id);
     evt_refresh_lists(app_handle);
