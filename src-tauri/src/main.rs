@@ -2,6 +2,7 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 use tauri::{generate_handler};
+use crate::devcode::bootstrap_lists;
 use crate::storage::{NonPersistentStorage, Storage};
 
 mod todo_list;
@@ -9,11 +10,14 @@ mod task;
 mod api;
 pub(crate) mod storage;
 mod test;
+mod devcode;
 
 fn main() {
     std::env::set_var("RUST_LOG", "debug");
     env_logger::init();
     let state = NonPersistentStorage::new();
+
+    bootstrap_lists(&state, 10, 100);
 
     tauri::Builder::default()
         .manage(state)
