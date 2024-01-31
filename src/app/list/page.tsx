@@ -21,12 +21,12 @@ const Page = () => {
   const loadList = useCallback(() => {
     context
       .pull_todo_list(id)
-      .then((resultingLits) => {
-        setList(resultingLits);
+      .then((resultingList) => {
+        setList(resultingList);
         setListSettings({
-          title: resultingLits.title,
-          icon: resultingLits.icon,
-          type: resultingLits.type,
+          title: resultingList.title,
+          icon: resultingList.icon,
+          type: resultingList.type,
         });
       })
       .catch(() => route("/", router).catch((e) => console.error(e)));

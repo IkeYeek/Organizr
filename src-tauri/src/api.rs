@@ -57,7 +57,6 @@ pub(crate) fn update_list(updated_list: TodoList, app_handle: AppHandle, state: 
     debug!("commands::update_list");
     let id = updated_list.id;
     state.update_list(updated_list.clone());
-    println!("{updated_list}");
     evt_refresh_list(id, app_handle);
 }#[allow(clippy::needless_pass_by_value)]
 #[tauri::command]

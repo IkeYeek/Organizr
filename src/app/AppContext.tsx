@@ -38,6 +38,7 @@ const AppContextProvider = ({ children }: { children: ReactNode }) => {
       list_type: string;
     } | null>("pull_todo_list", { id });
     if (rawList === null) throw new Error(`No list matching id ${id} returned`);
+
     return createTodoList(
       rawList.id,
       rawList.title,

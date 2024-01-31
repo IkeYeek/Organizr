@@ -7,7 +7,7 @@ import TaskInput from "@/app/list/TaskInput";
 import "react-datetime-picker/dist/DateTimePicker.css";
 import "react-calendar/dist/Calendar.css";
 import "react-clock/dist/Clock.css";
-import { EventType } from "bulma-calendar";
+import bulmaCalendar, { EventType } from "bulma-calendar";
 
 const TaskComponent = ({
   task,
@@ -40,7 +40,9 @@ const TaskComponent = ({
   }, [textAreaRef]);
 
   const [datetime, setDateTime] = useState(task.due);
-  const [calendar, setCalendar] = useState<any | undefined>(undefined);
+  const [calendar, setCalendar] = useState<bulmaCalendar | undefined>(
+    undefined,
+  );
   const calendarRef = useRef<HTMLInputElement>(null);
 
   const setNotificationMode = useCallback(
@@ -56,6 +58,10 @@ const TaskComponent = ({
   );
 
   useEffect(() => {
+    setDateTime(task.due);
+  }, [task.due]);
+
+  useEffect(() => {
     if (calendarRef.current !== null && calendar === undefined) {
       import("bulma-calendar").then((r) => {
         const bulmaCalendar = r.default;
@@ -65,7 +71,6 @@ const TaskComponent = ({
         });
         _calendar.on("save" as unknown as EventType, (e) => {
           setDateTime(e.data.date.start?.getTime());
-          console.log(e.data.date.start?.getTime());
           updateTask({
             ...task,
             due: e.data.date.start?.getTime(),
