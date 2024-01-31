@@ -4,7 +4,7 @@ import TodoDoneList from "@/app/list/TodoDoneList";
 import type { TodoList } from "@/business/TodoList";
 import { useAppContext } from "@/app/AppContext";
 import SimpleTodoList from "@/app/list/SimpleTodoList";
-import SimpleTodoListV2 from "@/app/list/SimpleTodoListV2";
+import SimpleTodoListV2 from "@/app/list/SimpleTodoList";
 
 const TodoListComponent = ({
   list,
