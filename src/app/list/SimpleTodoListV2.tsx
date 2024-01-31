@@ -2,7 +2,7 @@ import { TodoList } from "@/business/TodoList";
 import { Plus } from "react-feather";
 import { NotificationType, Task } from "@/business/Task";
 import TaskComponent from "@/app/list/TaskComponent";
-import { useCallback, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { useAppContext } from "@/app/AppContext";
 import { useVirtualizer } from "@tanstack/react-virtual";
 
@@ -18,14 +18,30 @@ const SimpleTodoList = ({
     context.create_task_in_list(list.id).catch((e) => console.error(e));
   }, [context, list.id]);
 
+  const listHTMLRef = useRef<HTMLUListElement>(null);
+  const virtualList = useVirtualizer({
+    count: list.tasks.length,
+    getScrollElement: useCallback(() => listHTMLRef.current, []),
+    estimateSize: useCallback(() => 10, []),
+  });
+
   return (
     <>
-      <ul>
-        {list.tasks.map((task) => {
+      <ul
+        ref={listHTMLRef}
+        style={{
+          minWidth: 1,
+          minHeight: 1,
+          maxWidth: "100%",
+          maxHeight: "100%",
+        }}
+      >
+        {virtualList.getVirtualItems().map((virtualTask) => {
+          const task = list.tasks[virtualTask.index];
           return (
             <TaskComponent
               task={task}
-              key={task.id}
+              key={virtualTask.key}
               updateTask={(t) => {
                 updateTask(t);
               }}

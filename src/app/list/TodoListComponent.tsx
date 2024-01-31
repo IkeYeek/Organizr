@@ -1,9 +1,10 @@
 import styles from "@/app/list/styles/todolist.module.scss";
 import { Settings } from "react-feather";
-import SimpleTodoList from "@/app/list/SimpleTodoList";
 import TodoDoneList from "@/app/list/TodoDoneList";
 import type { TodoList } from "@/business/TodoList";
 import { useAppContext } from "@/app/AppContext";
+import SimpleTodoList from "@/app/list/SimpleTodoList";
+import SimpleTodoListV2 from "@/app/list/SimpleTodoListV2";
 
 const TodoListComponent = ({
   list,
@@ -34,7 +35,7 @@ const TodoListComponent = ({
       </header>
       <div className="card-content">
         {list.type === "Todo" ? (
-          <SimpleTodoList
+          <SimpleTodoListV2
             list={list}
             updateTask={(task) =>
               context

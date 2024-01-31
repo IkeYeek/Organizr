@@ -16,9 +16,7 @@ fn main() {
     std::env::set_var("RUST_LOG", "debug");
     env_logger::init();
     let state = NonPersistentStorage::new();
-
-    bootstrap_lists(&state, 10, 100);
-
+    
     tauri::Builder::default()
         .manage(state)
         .invoke_handler(generate_handler![api::create_todo_list, api::pull_todo_list, api::pull_todo_lists, api::create_task_in_list, api::update_list, api::update_task_in_list, api::delete_task_in_list, api::delete_list])
